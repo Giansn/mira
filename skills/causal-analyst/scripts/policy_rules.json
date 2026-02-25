@@ -1,0 +1,32 @@
+{
+  "schema_version": "v1.0",
+  "default_sensitive_decision": "DENIED",
+  "timeout_ms": 5000,
+  "rules": [
+    {
+      "match": {"command_contains": "stats.sh"},
+      "decision": "GRANTED",
+      "reason": "Known safe aggregation script"
+    },
+    {
+      "match": {"command_contains": "openclaw config set"},
+      "decision": "GRANTED",
+      "reason": "OpenClaw-scoped config change"
+    },
+    {
+      "match": {"command_contains": "curl"},
+      "decision": "DENIED",
+      "reason": "Outbound network without explicit target"
+    },
+    {
+      "match": {"command_contains": "systemctl"},
+      "decision": "TIMEOUT",
+      "reason": "Service management requires explicit human approval"
+    },
+    {
+      "match": {"command_contains": "docker rm"},
+      "decision": "DENIED",
+      "reason": "Container removal without explicit target"
+    }
+  ]
+}

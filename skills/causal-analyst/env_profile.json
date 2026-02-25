@@ -1,0 +1,48 @@
+{
+  "os": "Ubuntu 24.04 LTS",
+  "platform": "AWS EC2 (us-east-2)",
+  "kernel": "6.17.0-1007-aws",
+  "disk": {
+    "total_gb": 30,
+    "used_pct": 38,
+    "type": "gp3"
+  },
+  "ram": {
+    "total_gb": 7.6,
+    "used_gb": 1.0
+  },
+  "swap": {
+    "total_gb": 2,
+    "used_gb": 0
+  },
+  "user": {
+    "name": "ubuntu",
+    "sudoers": true,
+    "elevated": true,
+    "multi_tenant": false
+  },
+  "python": {
+    "system": "3.12",
+    "venv": "/home/ubuntu/.venv"
+  },
+  "services": {
+    "openclaw": true,
+    "fail2ban": true,
+    "unattended_upgrades": true,
+    "snapd": true
+  },
+  "network": {
+    "ssh_exposed": true,
+    "firewall": "fail2ban only",
+    "vpc": true
+  },
+  "openclaw": {
+    "elevated": true,
+    "exec_ask": "on-miss",
+    "sandboxing": false
+  },
+  "kernel_tuning": {
+    "swappiness": 10,
+    "vfs_cache_pressure": 50
+  }
+}
