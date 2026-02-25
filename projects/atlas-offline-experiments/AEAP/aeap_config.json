@@ -1,0 +1,12 @@
+{
+  "default_depth": "fast",
+  "allowed_depths": ["fast", "balanced", "deep"],
+  "batch_size": 1,
+  "rate_limit": {"min_interval_sec": 120},
+  "offline_mode": true,
+  "risk": {
+    "thresholds": {"low": 0.0, "medium": 0.25, "high": 0.5, "critical": 0.75},
+    "adaptive": false,
+    "audit_only": true
+  }
+}

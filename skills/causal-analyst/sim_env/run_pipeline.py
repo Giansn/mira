@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Full SimEnv pipeline: classify -> policy -> mirror -> audit -> memory -> reflect.
+"""Full SimEnv pipeline: classify -> policy -> mirror -> audit -> memory -> reflect -> insights.
 Set OFFLINE=1 to skip LLM-dependent steps and use heuristic-only mirror."""
 import json
 import os
@@ -56,11 +56,29 @@ def main():
     insights = reflect(runs)
     save_insights(insights)
 
+    # Risk assessment integration (offline)
+    try:
+        from risk_assessment import assess_run
+        for r in runs:
+            risk = assess_run(r)
+            r.update({
+                'risk_score': risk['risk_score'],
+                'risk_category': risk['risk_category'],
+                'risk_notes': risk['risk_notes'],
+                'risk_action': risk.get('risk_action', 'PROCEED'),
+                'risk_adjust': risk.get('adjustment_meta', {})
+            })
+    except Exception as e:
+        # In offline mode, risk may not be available; proceed silently
+        pass
+
     print(f'Runs: {len(runs)}')
     for r in runs:
         flags = r['mirror_trace']['risk_flags']
         conf = r['mirror_trace']['confidence']
         print(f'  seed={r["seed"]} cmd={r["command"]:25s} tier={r["tier"]:10s} status={r["status"]:8s} conf={conf:.2f} flags={flags}')
+        if 'risk_score' in r:
+            print(f"    risk={r['risk_score']:.3f} cat={r['risk_category']} action={r['risk_action']}")
 
     print(f'Insights: {len(insights)}')
     for i in insights:
