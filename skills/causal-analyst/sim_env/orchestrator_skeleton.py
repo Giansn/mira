@@ -4,6 +4,9 @@ import json
 import uuid
 import datetime
 import hashlib
+import os
+
+OFFLINE = os.environ.get("OFFLINE", "0") == "1"
 
 RUN_HASH_CHUNK = lambda j: hashlib.sha256(j.encode('utf-8')).hexdigest()
 

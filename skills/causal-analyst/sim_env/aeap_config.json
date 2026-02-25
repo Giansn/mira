@@ -1,0 +1,9 @@
+{
+  "default_depth": "fast",
+  "allowed_depths": ["fast", "balanced", "deep"],
+  "batch_size": 1,
+  "rate_limit": {
+    "min_interval_sec": 120
+  },
+  "offline_mode": false
+}
