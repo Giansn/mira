@@ -1,0 +1,83 @@
+# OpenClaw Workspace .gitignore
+
+# Logs
+logs/
+*.log
+/tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+.env
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# OpenClaw specific
+media/
+.cache/
+.clawhub/lock.json
+
+# Temporary files
+*.tmp
+*.temp
+
+# Audio/video files
+*.mp3
+*.wav
+*.ogg
+*.mp4
+
+# Data files
+*.jsonl
+*.csv
+*.db
+*.sqlite
+
+# Configuration (except example configs)
+config/
+*.config.json
+credentials.json
+
+# Memory visualization data
+memory-viz/data/
+memory-viz/venv/
+
+# Simulation outputs
+simulations/output/
+
+# Session manager data
+session-manager/session-map.json
