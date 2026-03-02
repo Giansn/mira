@@ -475,3 +475,70 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Primary:** Claude Sonnet 4-6 (direct) - stable, reliable
 - **Fallback:** DeepSeek Reasoner - use with caution due to API compatibility issues
 - **Available:** Open Router Claude Sonnet 4-6 (for Telegram rate limit fallback)
+
+## Multi-Model Orchestrator Implementation (2026-03-02)
+
+### Problem Solved
+- **Complex task completion:** No single AI model excels at all types of tasks
+- **Solution:** Coordinate multiple specialized models to work together
+- **Inspiration:** Perplexity Computer's approach to multi-model task completion
+
+### Architecture
+1. **Task Analysis & Decomposition**
+   - Analyzes task complexity (simple, moderate, complex, extreme)
+   - Breaks complex tasks into subtasks based on patterns
+   - Identifies required capabilities for each subtask
+
+2. **Model Registry & Selection**
+   - **Model profiles:** Track capabilities and strength scores
+   - **Capability matching:** REASONING, CREATIVITY, CODING, RESEARCH, ANALYSIS, WRITING, PLANNING, REVIEW, SPECIALIST
+   - **Strength scoring:** Models rated 0.0-1.0 for each capability
+   - **Optimal selection:** Choose best model for each subtask
+
+3. **Workflow Coordination**
+   - **Sequential:** Models run one after another (for dependent tasks)
+   - **Parallel:** Independent subtasks executed simultaneously
+   - **Hierarchical:** Master model delegates to specialists
+   - **Ensemble:** Multiple models vote/combine outputs
+
+4. **Result Integration**
+   - Combines outputs from multiple models
+   - Calculates overall confidence score
+   - Provides execution metadata and model usage tracking
+
+### Implementation Details
+- **Skill:** `multi-model-orchestrator` (created March 2, 2026)
+- **Core classes:** `MultiModelOrchestrator`, `ModelProfile`, `Subtask`, `TaskDecomposition`, `OrchestrationResult`
+- **Model registry:** Pre-configured with claude-sonnet, gpt-4, gemini-pro, llama-code profiles
+- **Workflow patterns:** Research reports, software development, comparative analysis
+
+### Example Use Cases
+1. **Research Report:** Research → Outline → Write → Review (sequential)
+2. **Software Development:** Requirements → Design → Implement → Test (sequential)
+3. **Comparative Analysis:** Research A + Research B → Analyze → Synthesize (parallel + sequential)
+4. **Complex Analysis:** Multiple specialists work on different aspects simultaneously
+
+### Integration Points
+- **Perplexity-Inspired Skill:** Enhanced query analysis for task decomposition
+- **Async Agent Pattern:** Handles long-running multi-model workflows
+- **Heartbeat System:** Can schedule complex multi-model tasks
+- **Memory System:** Tracks orchestration history and model performance
+
+### Key Features
+- **Automatic task decomposition:** Pattern-based subtask identification
+- **Intelligent model selection:** Capability matching with strength scoring
+- **Flexible workflows:** Sequential, parallel, hierarchical, ensemble
+- **Mock execution:** Simulation mode for testing without API calls
+- **History tracking:** Records all orchestration attempts and results
+
+### Future Enhancements
+1. **Real model integration:** Connect to actual AI model APIs
+2. **Learning system:** Improve model selection based on past performance
+3. **Cost optimization:** Balance quality vs. cost across different models
+4. **Quality validation:** Cross-checking between model outputs
+5. **Dynamic workflow:** Adaptive workflow selection based on task characteristics
+
+### Git Commit
+- **Commit:** `2c59d06` - "Add multi-model orchestrator skill"
+- **Files:** SKILL.md, multi_model_orchestrator.py, examples/basic_usage.py
+- **Status:** Implemented, tested, committed to GitHub
