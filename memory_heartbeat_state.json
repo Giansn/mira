@@ -1,0 +1,33 @@
+{
+  "last_run": "2026-03-01T22:56:22.077989",
+  "last_analysis": "2026-03-01T22:56:22.077632",
+  "stats": {
+    "total_memories": 39,
+    "total_tags": 20,
+    "total_keywords": 490,
+    "total_relationships": 250
+  },
+  "recent_activity": [
+    {
+      "timestamp": "2026-03-01T22:54:59.574575",
+      "action": "memory_analysis",
+      "stats": {
+        "total_memories": 39,
+        "total_tags": 20,
+        "total_keywords": 513,
+        "total_relationships": 250
+      }
+    },
+    {
+      "timestamp": "2026-03-01T22:56:22.077632",
+      "action": "memory_analysis",
+      "stats": {
+        "total_memories": 39,
+        "total_tags": 20,
+        "total_keywords": 490,
+        "total_relationships": 250
+      }
+    }
+  ],
+  "pending_tasks": []
+}
