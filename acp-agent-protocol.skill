@@ -1,0 +1,12 @@
+acp-agent-protocol.skill - Agent Control Protocol for OpenClaw
+
+STATUS: ACP CLI available but acpx runtime plugin missing
+ACTION NEEDED: Install acpx plugin and configure API keys
+
+Quick test:
+1. Check status: python3 skills/acp-agent-protocol/scripts/check_acp_status.py
+2. Install acpx: npm install -g @openclaw/acpx (if available)
+3. Set API key: export ANTHROPIC_API_KEY=your-key
+4. Test: openclaw acp client
+
+Current limitation: "ACP runtime backend is not configured" error when trying to spawn ACP sessions.
