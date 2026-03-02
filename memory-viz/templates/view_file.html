@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}{{ filename }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-text me-2"></i>{{ filename }}
+                    </h5>
+                    <small class="text-muted">{{ parser.MEMORY_DIR }}/{{ filename }}</small>
+                </div>
+                <div>
+                    <a href="/" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- File Info -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-dark">
+                            <div class="card-body">
+                                <h6 class="card-title">File Information</h6>
+                                <div class="small">
+                                    <div class="mb-2">
+                                        <span class="text-muted">Size:</span><br>
+                                        <strong>{{ raw_content|length }} bytes</strong>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="text-muted">Lines:</span><br>
+                                        <strong>{{ raw_content.count('\n') + 1 }}</strong>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="text-muted">Words:</span><br>
+                                        <strong>{{ raw_content.split()|length }}</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Characters:</span><br>
+                                        <strong>{{ raw_content|length }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-9">
+                        <!-- Navigation Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="fileTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button">
+                                    <i class="bi bi-eye me-1"></i> Preview
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="raw-tab" data-bs-toggle="tab" data-bs-target="#raw" type="button">
+                                    <i class="bi bi-code me-1"></i> Raw Markdown
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button">
+                                    <i class="bi bi-graph-up me-1"></i> Analysis
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="fileTabContent">
+                            <!-- Preview Tab -->
+                            <div class="tab-pane fade show active" id="preview" role="tabpanel">
+                                <div class="memory-content p-3 bg-dark rounded">
+                                    {{ content|safe }}
+                                </div>
+                            </div>
+                            
+                            <!-- Raw Tab -->
+                            <div class="tab-pane fade" id="raw" role="tabpanel">
+                                <div class="position-relative">
+                                    <pre class="p-3 bg-dark rounded" style="max-height: 600px; overflow-y: auto;"><code>{{ raw_content }}</code></pre>
+                                    <button class="btn btn-sm btn-outline-primary position-absolute top-0 end-0 m-2" onclick="copyRawContent()">
+                                        <i class="bi bi-clipboard"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Tab -->
+                            <div class="tab-pane fade" id="analysis" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card bg-dark mb-3">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Word Frequency</h6>
+                                                <div id="word-frequency">
+                                                    <!-- Will be populated by JavaScript -->
+                                                    <div class="text-center text-muted py-3">
+                                                        <i class="bi bi-hourglass-split"></i>
+                                                        <p class="mt-2">Analyzing content...</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-dark mb-3">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Section Analysis</h6>
+                                                <div id="section-analysis">
+                                                    <!-- Will be populated by JavaScript -->
+                                                    <div class="text-center text-muted py-3">
+                                                        <i class="bi bi-hourglass-split"></i>
+                                                        <p class="mt-2">Analyzing sections...</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-dark">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Content Statistics</h6>
+                                        <div class="row" id="content-stats">
+                                            <!-- Will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Copy raw content to clipboard
+    function copyRawContent() {
+        const rawContent = `{{ raw_content|replace('`', '\\`')|replace('${', '\\${') }}`;
+        
+        navigator.clipboard.writeText(rawContent)
+            .then(() => {
+                showToast('Content copied to clipboard', 'success');
+            })
+            .catch(err => {
+                console.error('Failed to copy:', err);
+                showToast('Failed to copy content', 'danger');
+            });
+    }
+    
+    // Analyze content
+    function analyzeContent() {
+        const content = `{{ raw_content }}`;
+        
+        // Word frequency analysis
+        const words = content.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
+        const commonWords = new Set(['that', 'with', 'this', 'from', 'have', 'what', 'when', 'how', 'why', 'were', 'they', 'their', 'there', 'which', 'about']);
+        
+        const wordFreq = {};
+        words.forEach(word => {
+            if (!commonWords.has(word)) {
+                wordFreq[word] = (wordFreq[word] || 0) + 1;
+            }
+        });
+        
+        // Get top 10 words
+        const topWords = Object.entries(wordFreq)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+        
+        // Update word frequency display
+        const wordFreqContainer = document.getElementById('word-frequency');
+        wordFreqContainer.innerHTML = topWords.map(([word, count]) => `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>${word}</span>
+                <span class="badge bg-primary">${count}</span>
+            </div>
+        `).join('');
+        
+        // Section analysis
+        const lines = content.split('\n');
+        const sections = [];
+        let currentSection = null;
+        let currentContent = [];
+        
+        lines.forEach(line => {
+            if (line.startsWith('# ')) {
+                if (currentSection) {
+                    sections.push({
+                        title: currentSection,
+                        lines: currentContent.length,
+                        words: currentContent.join(' ').split(/\s+/).length
+                    });
+                }
+                currentSection = line.substring(2).trim();
+                currentContent = [];
+            } else if (line.startsWith('## ')) {
+                if (currentSection) {
+                    sections.push({
+                        title: currentSection,
+                        lines: currentContent.length,
+                        words: currentContent.join(' ').split(/\s+/).length
+                    });
+                }
+                currentSection = line.substring(3).trim();
+                currentContent = [];
+            } else if (line.startsWith('### ')) {
+                if (currentSection) {
+                    sections.push({
+                        title: currentSection,
+                        lines: currentContent.length,
+                        words: currentContent.join(' ').split(/\s+/).length
+                    });
+                }
+                currentSection = line.substring(4).trim();
+                currentContent = [];
+            } else if (line.trim() && currentSection) {
+                currentContent.push(line.trim());
+            }
+        });
+        
+        // Add last section
+        if (currentSection) {
+            sections.push({
+                title: currentSection,
+                lines: currentContent.length,
+                words: currentContent.join(' ').split(/\s+/).length
+            });
+        }
+        
+        // Update section analysis
+        const sectionContainer = document.getElementById('section-analysis');
+        sectionContainer.innerHTML = sections.slice(0, 10).map(section => `
+            <div class="mb-3">
+                <div class="small text-truncate mb-1" title="${section.title}">
+                    <strong>${section.title}</strong>
+                </div>
+                <div class="d-flex justify-content-between small text-muted">
+                    <span>${section.lines} lines</span>
+                    <span>${section.words} words</span>
+                </div>
+            </div>
+        `).join('');
+        
+        if (sections.length === 0) {
+            sectionContainer.innerHTML = '<div class="text-muted">No sections found</div>';
+        }
+        
+        // Content statistics
+        const charCount = content.length;
+        const wordCount = content.split(/\s+/).length;
+        const lineCount = content.split('\n').length;
+        const sentenceCount = content.split(/[.!?]+/).length - 1;
+        const avgWordLength = charCount / wordCount;
+        const avgSentenceLength = wordCount / sentenceCount;
+        
+        const statsContainer = document.getElementById('content-stats');
+        statsContainer.innerHTML = `
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6">${charCount}</div>
+                    <div class="small text-muted">Characters</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6">${wordCount}</div>
+                    <div class="small text-muted">Words</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6">${lineCount}</div>
+                    <div class="small text-muted">Lines</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6">${sentenceCount}</div>
+                    <div class="small text-muted">Sentences</div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6">${avgWordLength.toFixed(1)}</div>
+                    <div class="small text-muted">Avg. Word Length</div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="text-center">
+                    <div class="display-6">${avgSentenceLength.toFixed(1)}</div>
+                    <div class="small text-muted">Avg. Sentence Length</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Initialize analysis when analysis tab is shown
+    document.getElementById('analysis-tab').addEventListener('shown.bs.tab', analyzeContent);
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        updateLastUpdated();
+    });
+</script>
+{% endblock %}

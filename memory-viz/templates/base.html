@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Memory Visualization{% endblock %} - OpenClaw</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --bs-body-bg: #0d1117;
+            --bs-body-color: #c9d1d9;
+            --bs-primary: #58a6ff;
+            --bs-secondary: #6e7681;
+            --bs-success: #238636;
+            --bs-info: #79c0ff;
+            --bs-warning: #d29922;
+            --bs-danger: #f85149;
+        }
+        
+        body {
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+        
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+        }
+        
+        .card-header {
+            background-color: #0d1117;
+            border-bottom: 1px solid #30363d;
+            font-weight: 600;
+        }
+        
+        .table {
+            --bs-table-color: var(--bs-body-color);
+            --bs-table-bg: transparent;
+            --bs-table-border-color: #30363d;
+            --bs-table-striped-bg: rgba(88, 166, 255, 0.05);
+            --bs-table-active-bg: rgba(88, 166, 255, 0.1);
+            --bs-table-hover-bg: rgba(88, 166, 255, 0.075);
+        }
+        
+        .nav-tabs {
+            --bs-nav-tabs-border-color: #30363d;
+            --bs-nav-tabs-link-hover-border-color: #30363d;
+            --bs-nav-tabs-link-active-color: #58a6ff;
+            --bs-nav-tabs-link-active-bg: #161b22;
+            --bs-nav-tabs-link-active-border-color: #30363d #30363d #161b22;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #8b949e;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #c9d1d9;
+            border-color: #30363d;
+        }
+        
+        .btn-primary {
+            background-color: #238636;
+            border-color: #2ea043;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2ea043;
+            border-color: #3fb950;
+        }
+        
+        .btn-outline-primary {
+            color: #58a6ff;
+            border-color: #58a6ff;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #58a6ff;
+            border-color: #58a6ff;
+            color: #0d1117;
+        }
+        
+        .timeline-item {
+            border-left: 2px solid #58a6ff;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #58a6ff;
+        }
+        
+        .search-highlight {
+            background-color: rgba(88, 166, 255, 0.3);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .topic-tag {
+            display: inline-block;
+            background-color: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin: 0.125rem;
+            font-size: 0.875rem;
+        }
+        
+        .file-badge {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.75rem;
+        }
+        
+        .memory-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .memory-content h1, .memory-content h2, .memory-content h3, .memory-content h4 {
+            color: #58a6ff;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .memory-content ul, .memory-content ol {
+            padding-left: 1.5rem;
+        }
+        
+        .memory-content li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .memory-content code {
+            background-color: rgba(110, 118, 129, 0.4);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875em;
+        }
+        
+        .memory-content pre {
+            background-color: rgba(110, 118, 129, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        
+        .memory-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        .memory-content table {
+            border: 1px solid #30363d;
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .memory-content th, .memory-content td {
+            border: 1px solid #30363d;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        
+        .memory-content th {
+            background-color: rgba(110, 118, 129, 0.1);
+            font-weight: 600;
+        }
+        
+        .memory-content tr:nth-child(even) {
+            background-color: rgba(110, 118, 129, 0.05);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-brain me-2"></i>
+                <strong>OpenClaw Memory</strong>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#timeline" onclick="showTab('timeline')">
+                            <i class="bi bi-calendar-week me-1"></i> Timeline
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#search" onclick="showTab('search')">
+                            <i class="bi bi-search me-1"></i> Search
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#files" onclick="showTab('files')">
+                            <i class="bi bi-files me-1"></i> Files
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#topics" onclick="showTab('topics')">
+                            <i class="bi bi-tags me-1"></i> Topics
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex">
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="refreshData()">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                    <span class="navbar-text text-muted" id="last-updated">
+                        Loading...
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container-fluid py-4">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="mt-5 py-3 border-top border-secondary text-center text-muted">
+        <div class="container">
+            <small>
+                OpenClaw Memory Visualization &copy; 2026
+                <span class="mx-2">•</span>
+                <span id="memory-stats">Loading stats...</span>
+            </small>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Global state
+        let memoryData = null;
+        
+        // Utility functions
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected tab
+            const tabContent = document.getElementById(tabId + '-tab');
+            if (tabContent) {
+                tabContent.style.display = 'block';
+            }
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        function refreshData() {
+            fetch('/api/refresh')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        loadData();
+                        // Show success toast
+                        showToast('Data refreshed successfully', 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing data:', error);
+                    showToast('Error refreshing data', 'danger');
+                });
+        }
+        
+        function showToast(message, type = 'info') {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            // Add to container
+            const container = document.getElementById('toast-container') || (() => {
+                const div = document.createElement('div');
+                div.id = 'toast-container';
+                div.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                document.body.appendChild(div);
+                return div;
+            })();
+            
+            container.appendChild(toast);
+            
+            // Initialize and show
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            // Remove after hidden
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
