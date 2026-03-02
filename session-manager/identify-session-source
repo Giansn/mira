@@ -1,0 +1,88 @@
+#!/bin/bash
+# Identify session source (domain/origin) based on patterns
+
+SESSION_KEY="$1"
+
+if [ -z "$SESSION_KEY" ]; then
+  echo "Usage: $0 <session-key>"
+  echo ""
+  echo "Example: $0 agent:main:main"
+  exit 1
+fi
+
+SESSION_MAP="$(dirname "$0")/session-map.json"
+
+echo "=== Session Source Identification ==="
+echo "Session key: $SESSION_KEY"
+echo ""
+
+# Check direct mapping first
+DIRECT_NAME=$(jq -r --arg key "$SESSION_KEY" '.sessions | to_entries[] | select(.value == $key) | .key' "$SESSION_MAP" 2>/dev/null)
+
+if [ -n "$DIRECT_NAME" ]; then
+  echo "✅ Direct mapping found: $DIRECT_NAME"
+  
+  # Check source mapping for this name
+  SOURCE=$(jq -r --arg name "$DIRECT_NAME" '.source_mapping | to_entries[] | select(.patterns[] | contains($name)) | .key' "$SESSION_MAP" 2>/dev/null)
+  
+  if [ -n "$SOURCE" ]; then
+    DESCRIPTION=$(jq -r --arg source "$SOURCE" '.source_mapping[$source].description' "$SESSION_MAP" 2>/dev/null)
+    echo "   Source: $SOURCE"
+    echo "   Description: $DESCRIPTION"
+  fi
+else
+  echo "🔍 No direct mapping. Checking patterns..."
+  
+  # Check pattern matching
+  SOURCE_FOUND=""
+  DESCRIPTION_FOUND=""
+  
+  while IFS="|" read -r source patterns_json; do
+    # Check each pattern
+    while IFS= read -r pattern; do
+      if [[ "$pattern" == *"*"* ]]; then
+        # Convert glob pattern to regex
+        regex_pattern=$(echo "$pattern" | sed 's/\*/.*/g')
+        if [[ "$SESSION_KEY" =~ $regex_pattern ]]; then
+          SOURCE_FOUND="$source"
+          DESCRIPTION_FOUND=$(jq -r --arg src "$source" '.source_mapping[$src].description' "$SESSION_MAP" 2>/dev/null)
+          break 2
+        fi
+      elif [[ "$SESSION_KEY" == "$pattern" ]]; then
+        SOURCE_FOUND="$source"
+        DESCRIPTION_FOUND=$(jq -r --arg src "$source" '.source_mapping[$src].description' "$SESSION_MAP" 2>/dev/null)
+        break 2
+      fi
+    done < <(echo "$patterns_json" | jq -r '.[]')
+  done < <(jq -r '.source_mapping | to_entries[] | "\(.key)|\(.value.patterns)"' "$SESSION_MAP" 2>/dev/null)
+  
+  if [ -n "$SOURCE_FOUND" ]; then
+    echo "✅ Pattern match: $SOURCE_FOUND"
+    echo "   Description: $DESCRIPTION_FOUND"
+    
+    # Suggest adding to direct mapping
+    echo ""
+    echo "💡 Suggestion: Add to direct mapping with:"
+    HUMAN_NAME=$(echo "$SESSION_KEY" | sed 's/agent:main://' | sed 's/:/_/g' | sed 's/[^a-zA-Z0-9_-]//g')
+    echo "   {\"$HUMAN_NAME\": \"$SESSION_KEY\"}"
+  else
+    echo "❌ No pattern match found."
+    
+    # Make educated guess
+    if [[ "$SESSION_KEY" == *telegram* ]]; then
+      echo "   Likely source: telegram (based on keyword)"
+    elif [[ "$SESSION_KEY" == *main* ]] && [[ "$SESSION_KEY" == agent:main:main ]]; then
+      echo "   Likely source: entrosana.com dashboard (main agent session)"
+    elif [[ "$SESSION_KEY" == *cron* ]]; then
+      echo "   Likely source: cron job"
+    elif [[ "$SESSION_KEY" == *webchat* ]]; then
+      echo "   Likely source: webchat interface"
+    else
+      echo "   Unknown source. Consider adding pattern to session-map.json"
+    fi
+  fi
+fi
+
+echo ""
+echo "=== Session Details ==="
+openclaw sessions --json | jq -r --arg key "$SESSION_KEY" '.sessions[] | select(.key == $key) | "Updated: \(.updatedAt | todate)\nAge: \(.ageMs / 1000 / 60 | floor) minutes\nTokens: \(.totalTokens // 0)"'

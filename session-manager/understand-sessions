@@ -1,0 +1,91 @@
+#!/bin/bash
+# Understand WHY sessions exist and what they're for
+
+echo "=== Understanding OpenClaw Sessions ==="
+echo ""
+
+# Get all sessions
+SESSIONS_JSON=$(openclaw sessions --json)
+
+echo "Total sessions: $(echo "$SESSIONS_JSON" | jq '.sessions | length')"
+echo ""
+
+echo "Session Analysis:"
+echo "-----------------"
+
+echo "$SESSIONS_JSON" | jq -r '.sessions[] | .key' | while read -r SESSION_KEY; do
+  echo "🔍 Session: $SESSION_KEY"
+  
+  # Get session details
+  DETAILS=$(echo "$SESSIONS_JSON" | jq -r --arg key "$SESSION_KEY" '.sessions[] | select(.key == $key)')
+  
+  # Age
+  AGE_MS=$(echo "$DETAILS" | jq -r '.ageMs')
+  AGE_MIN=$((AGE_MS / 1000 / 60))
+  echo "   Age: $AGE_MIN minutes"
+  
+  # Tokens
+  TOKENS=$(echo "$DETAILS" | jq -r '.totalTokens // 0')
+  echo "   Tokens used: $TOKENS"
+  
+  # Likely purpose
+  if [[ "$SESSION_KEY" == "agent:main:main" ]]; then
+    echo "   Purpose: Main agent session (likely entrosana.com dashboard)"
+    echo "   Why it exists: Created when agent starts or web UI connects"
+  elif [[ "$SESSION_KEY" == *"agent:main:telegram"* ]]; then
+    echo "   Purpose: Telegram messaging session"
+    echo "   Why it exists: Created when you chat via Telegram"
+  elif [[ "$SESSION_KEY" == *"telegram:slash"* ]]; then
+    echo "   Purpose: Legacy Telegram session"
+    echo "   Why it exists: May be from web UI or old connection"
+  elif [[ "$SESSION_KEY" == *"cron"* ]]; then
+    echo "   Purpose: Cron job session"
+    echo "   Why it exists: Automated task execution"
+  elif [[ "$SESSION_KEY" == *"webchat"* ]]; then
+    echo "   Purpose: Webchat interface session"
+    echo "   Why it exists: Web-based chat interface"
+  else
+    echo "   Purpose: Unknown"
+    echo "   Why it exists: Unknown connection type"
+  fi
+  
+  # Activity level
+  if [ "$AGE_MIN" -lt 5 ]; then
+    echo "   Activity: Very recent (active now or recently)"
+  elif [ "$AGE_MIN" -lt 60 ]; then
+    echo "   Activity: Recent (last hour)"
+  else
+    echo "   Activity: Old (may be cleaned up soon)"
+  fi
+  
+  echo ""
+done
+
+echo "=== Why You See 'Gianluca Gianluca' ==="
+echo ""
+echo "The web UI shows 'Gianluca' for sessions because:"
+echo "1. Sessions have your Telegram user ID (1134139785)"
+echo "2. Web UI looks up the name 'Gianluca' from Telegram"
+echo "3. Multiple sessions = multiple 'Gianluca' entries"
+echo ""
+echo "Sessions are NOT duplicates - they're different connections:"
+echo "• One might be your Telegram app"
+echo "• Another might be the web UI itself"
+echo "• Another might be a background connection"
+echo ""
+echo "=== Working WITH OpenClaw ==="
+echo ""
+echo "Do:"
+echo "✓ Use 'openclaw sessions cleanup' for maintenance"
+echo "✓ Accept that multiple sessions are normal"
+echo "✓ Let old sessions age out naturally"
+echo ""
+echo "Don't:"
+echo "✗ Manually edit session store files"
+echo "✗ Delete sessions that OpenClaw recreates"
+echo "✗ Fight the session management system"
+echo ""
+echo "OpenClaw's session management is designed for:"
+echo "• Reliability (sessions persist)"
+echo "• Performance (cleanup when needed)"
+echo "• Continuity (reconnect to existing sessions)"

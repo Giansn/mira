@@ -1,0 +1,77 @@
+#!/bin/bash
+# Clean up old OpenClaw sessions, keeping only active/protected ones
+
+SESSION_STORE="/home/ubuntu/.openclaw/agents/main/sessions/sessions.json"
+SESSION_MAP="$(dirname "$0")/session-map.json"
+BACKUP_DIR="/home/ubuntu/.openclaw/agents/main/sessions/backups"
+
+# Create backup directory
+mkdir -p "$BACKUP_DIR"
+
+echo "=== OpenClaw Session Cleanup ==="
+echo ""
+
+# Create backup
+BACKUP_FILE="$BACKUP_DIR/sessions-$(date +%Y%m%d-%H%M%S).json"
+cp "$SESSION_STORE" "$BACKUP_FILE"
+echo "✓ Backup created: $BACKUP_FILE"
+
+# Get protected sessions from mapping
+PROTECTED_SESSIONS=()
+if [ -f "$SESSION_MAP" ]; then
+  while IFS= read -r session_key; do
+    PROTECTED_SESSIONS+=("$session_key")
+  done < <(jq -r '.sessions[]' "$SESSION_MAP")
+fi
+
+echo ""
+echo "Protected sessions (will be kept):"
+for session in "${PROTECTED_SESSIONS[@]}"; do
+  echo "  - $session"
+done
+
+echo ""
+echo "Current sessions:"
+openclaw sessions --json | jq -r '.sessions[] | "  \(.key)"'
+
+echo ""
+echo "Cleaning up..."
+
+# Create cleaned session store
+TEMP_FILE=$(mktemp)
+if [ ${#PROTECTED_SESSIONS[@]} -gt 0 ]; then
+  openclaw sessions --json | jq --argjson protected "$(printf '%s\n' "${PROTECTED_SESSIONS[@]}" | jq -R . | jq -s .)" '
+    .sessions |= with_entries(
+      select(
+        .key as $k | 
+        ($protected | index($k) != null) or
+        (.value.updatedAt > (now - (24 * 60 * 60 * 1000) | floor))  # Keep sessions < 24h old
+      )
+    )
+  ' > "$TEMP_FILE"
+else
+  openclaw sessions --json | jq '
+    .sessions |= with_entries(
+      select(.value.updatedAt > (now - (24 * 60 * 60 * 1000) | floor))  # Keep sessions < 24h old
+    )
+  ' > "$TEMP_FILE"
+fi
+
+SESSION_COUNT_BEFORE=$(openclaw sessions --json | jq '.sessions | length')
+SESSION_COUNT_AFTER=$(jq '.sessions | length' "$TEMP_FILE")
+
+if [ "$SESSION_COUNT_AFTER" -lt "$SESSION_COUNT_BEFORE" ]; then
+  # Replace session store
+  mv "$TEMP_FILE" "$SESSION_STORE"
+  echo "✓ Cleanup complete!"
+  echo "  Sessions before: $SESSION_COUNT_BEFORE"
+  echo "  Sessions after: $SESSION_COUNT_AFTER"
+  echo "  Removed: $((SESSION_COUNT_BEFORE - SESSION_COUNT_AFTER)) sessions"
+else
+  echo "✓ No cleanup needed. All sessions are protected or recent."
+  rm "$TEMP_FILE"
+fi
+
+echo ""
+echo "Final session list:"
+openclaw sessions --json | jq -r '.sessions[] | "  \(.key)"'

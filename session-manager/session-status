@@ -1,0 +1,90 @@
+#!/bin/bash
+# Show current session status in a clean format
+
+echo "=== OpenClaw Session Status ==="
+echo "Generated: $(date)"
+echo ""
+
+# Get session count
+SESSION_COUNT=$(openclaw sessions --json | jq '.sessions | length')
+echo "📊 Total sessions: $SESSION_COUNT"
+echo ""
+
+# Show sessions with human names
+echo "Active sessions:"
+echo "----------------"
+
+SESSION_MAP="$(dirname "$0")/session-map.json"
+
+if [ -f "$SESSION_MAP" ]; then
+  # Use mapping
+  while IFS="=" read -r human_name session_key; do
+    # Check if session exists
+    if openclaw sessions --json | jq -e ".sessions[] | select(.key == \"$session_key\")" > /dev/null 2>&1; then
+      UPDATED=$(openclaw sessions --json | jq -r ".sessions[] | select(.key == \"$session_key\") | .updatedAt | todate")
+      
+      # Get source information
+      SOURCE_INFO=""
+      SOURCE=$(jq -r --arg key "$session_key" '
+        .source_mapping | to_entries[] | 
+        select(.value.patterns[] | contains($key)) | .key
+      ' "$SESSION_MAP" 2>/dev/null || echo "")
+      
+      if [ -n "$SOURCE" ]; then
+        SOURCE_INFO=" (source: $SOURCE)"
+      fi
+      
+      echo "✅ $human_name$SOURCE_INFO"
+      echo "   Key: $session_key"
+      echo "   Last active: $UPDATED"
+      echo ""
+    else
+      echo "❌ $human_name (not found)"
+      echo "   Key: $session_key"
+      echo ""
+    fi
+  done < <(jq -r '.sessions | to_entries[] | "\(.key)=\(.value)"' "$SESSION_MAP")
+else
+  # No mapping, show raw
+  openclaw sessions --json | jq -r '.sessions[] | "🔹 \(.key)\n   Updated: \(.updatedAt | todate)"'
+  echo ""
+fi
+
+# Show unmapped sessions
+echo "Other sessions (not in mapping):"
+echo "--------------------------------"
+MAPPED_KEYS=$(jq -r '.sessions[]' "$SESSION_MAP" 2>/dev/null || echo "")
+
+openclaw sessions --json | jq -r '.sessions[] | .key' | while read -r key; do
+  if ! echo "$MAPPED_KEYS" | grep -q "^$key$"; then
+    UPDATED=$(openclaw sessions --json | jq -r ".sessions[] | select(.key == \"$key\") | .updatedAt | todate")
+    
+    # Suggest a name based on pattern
+    if [[ "$key" == *telegram* ]]; then
+      if [[ "$key" == *slash* ]]; then
+        SUGGESTION="(suggest: telegram)"
+      else
+        SUGGESTION="(suggest: telegram-other)"
+      fi
+    elif [[ "$key" == *webchat* ]]; then
+      SUGGESTION="(suggest: webchat)"
+    elif [[ "$key" == *cron* ]]; then
+      SUGGESTION="(suggest: cron-job)"
+    elif [[ "$key" == *main* ]] && [[ "$key" == *agent:main:main* ]]; then
+      SUGGESTION="(suggest: dashboard)"
+    elif [[ "$key" == *main* ]]; then
+      SUGGESTION="(suggest: main-session)"
+    else
+      SUGGESTION=""
+    fi
+    
+    echo "🔸 $key $SUGGESTION"
+    echo "   Updated: $UPDATED"
+    echo ""
+  fi
+done
+
+echo "=== Recommendations ==="
+echo "1. Run './cleanup-sessions' to remove old sessions"
+echo "2. Edit 'session-map.json' to add missing session mappings"
+echo "3. Check for duplicate sessions with similar patterns"

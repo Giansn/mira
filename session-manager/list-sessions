@@ -1,0 +1,39 @@
+#!/bin/bash
+# List OpenClaw sessions with human-readable names
+
+SESSION_STORE="/home/ubuntu/.openclaw/agents/main/sessions/sessions.json"
+SESSION_MAP="$(dirname "$0")/session-map.json"
+
+echo "=== OpenClaw Session Manager ==="
+echo ""
+
+# Get all sessions
+echo "Raw sessions from OpenClaw:"
+openclaw sessions --json | jq -r '.sessions[] | "  \(.key) - Updated: \(.updatedAt | todate)"'
+
+echo ""
+echo "---"
+echo ""
+
+# Show human-readable mapping
+echo "Human-readable session mapping:"
+if [ -f "$SESSION_MAP" ]; then
+  jq -r '.sessions | to_entries[] | "  \(.key) → \(.value)"' "$SESSION_MAP"
+else
+  echo "  No session mapping found. Run setup first."
+fi
+
+echo ""
+echo "---"
+echo ""
+
+# Show active sessions with suggestions
+echo "Recommended session names:"
+echo "  1. 'telegram' - Your Telegram session"
+echo "  2. 'dashboard' - Web control interface session"
+echo "  3. 'webchat' - Webchat sessions"
+echo "  4. 'cron-*' - Cron job sessions"
+
+echo ""
+echo "To rename a session: ./rename-session <internal-key> <human-name>"
+echo "To clean up old sessions: ./cleanup-sessions"

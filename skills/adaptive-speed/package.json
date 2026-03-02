@@ -1,0 +1,9 @@
+{
+  "name": "adaptive-speed",
+  "version": "0.1.0",
+  "description": "Adaptive speed optimization with latency awareness and subcontract routing",
+  "main": "index.js",
+  "keywords": ["speed", "optimization", "latency", "adaptive"],
+  "author": "Mira",
+  "license": "MIT"
+}

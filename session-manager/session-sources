@@ -1,0 +1,122 @@
+#!/bin/bash
+# Show all sessions with identified sources
+
+echo "=== OpenClaw Session Sources ==="
+echo "Generated: $(date)"
+echo ""
+
+SESSION_MAP="$(dirname "$0")/session-map.json"
+
+# Get all sessions
+openclaw sessions --json | jq -r '.sessions[] | .key' | while read -r SESSION_KEY; do
+  echo "Session: $SESSION_KEY"
+  
+  # Check direct mapping
+  DIRECT_NAME=$(jq -r --arg key "$SESSION_KEY" '.sessions | to_entries[] | select(.value == $key) | .key' "$SESSION_MAP" 2>/dev/null)
+  
+  if [ -n "$DIRECT_NAME" ]; then
+    echo "  Name: $DIRECT_NAME"
+    
+    # Find source
+    SOURCE=$(jq -r --arg key "$SESSION_KEY" '
+      .source_mapping | to_entries[] | 
+      select(.value.patterns[] | contains($key)) | .key
+    ' "$SESSION_MAP" 2>/dev/null || echo "unknown")
+    
+    if [ "$SOURCE" != "unknown" ]; then
+      DESCRIPTION=$(jq -r --arg src "$SOURCE" '.source_mapping[$src].description' "$SESSION_MAP" 2>/dev/null)
+      echo "  Source: $SOURCE"
+      echo "  Description: $DESCRIPTION"
+    else
+      echo "  Source: unknown (not in source_mapping)"
+    fi
+  else
+    # Try to identify by pattern
+    SOURCE_FOUND=""
+    
+    while IFS="|" read -r source patterns_json; do
+      while IFS= read -r pattern; do
+        if [[ "$pattern" == *"*"* ]]; then
+          regex_pattern=$(echo "$pattern" | sed 's/\*/.*/g')
+          if [[ "$SESSION_KEY" =~ $regex_pattern ]]; then
+            SOURCE_FOUND="$source"
+            break 2
+          fi
+        elif [[ "$SESSION_KEY" == "$pattern" ]]; then
+          SOURCE_FOUND="$source"
+          break 2
+        fi
+      done < <(echo "$patterns_json" | jq -r '.[]')
+    done < <(jq -r '.source_mapping | to_entries[] | "\(.key)|\(.value.patterns)"' "$SESSION_MAP" 2>/dev/null)
+    
+    if [ -n "$SOURCE_FOUND" ]; then
+      DESCRIPTION=$(jq -r --arg src "$SOURCE_FOUND" '.source_mapping[$src].description' "$SESSION_MAP" 2>/dev/null)
+      echo "  Source: $SOURCE_FOUND (pattern match)"
+      echo "  Description: $DESCRIPTION"
+    else
+      # Educated guess
+      if [[ "$SESSION_KEY" == *telegram* ]]; then
+        echo "  Source: telegram (likely - contains 'telegram')"
+      elif [[ "$SESSION_KEY" == agent:main:main ]]; then
+        echo "  Source: entrosana.com dashboard (main agent session)"
+      elif [[ "$SESSION_KEY" == *cron* ]]; then
+        echo "  Source: cron job (likely)"
+      elif [[ "$SESSION_KEY" == *webchat* ]]; then
+        echo "  Source: webchat interface (likely)"
+      else
+        echo "  Source: unknown"
+      fi
+    fi
+  fi
+  
+  # Show session details
+  UPDATED=$(openclaw sessions --json | jq -r ".sessions[] | select(.key == \"$SESSION_KEY\") | .updatedAt | todate")
+  AGE_MIN=$(( $(openclaw sessions --json | jq -r ".sessions[] | select(.key == \"$SESSION_KEY\") | .ageMs") / 1000 / 60 ))
+  TOKENS=$(openclaw sessions --json | jq -r ".sessions[] | select(.key == \"$SESSION_KEY\") | .totalTokens // 0")
+  
+  echo "  Last active: $UPDATED"
+  echo "  Age: $AGE_MIN minutes"
+  echo "  Tokens used: $TOKENS"
+  echo ""
+done
+
+echo "=== Summary ==="
+TOTAL=$(openclaw sessions --json | jq '.sessions | length')
+echo "Total sessions: $TOTAL"
+
+# Count by likely source
+echo ""
+echo "Sessions by likely source:"
+echo "---------------------------"
+
+# Initialize counters
+declare -A SOURCE_COUNTS
+SOURCE_COUNTS["entrosana.com"]=0
+SOURCE_COUNTS["telegram"]=0
+SOURCE_COUNTS["cron"]=0
+SOURCE_COUNTS["webchat"]=0
+SOURCE_COUNTS["unknown"]=0
+
+openclaw sessions --json | jq -r '.sessions[] | .key' | while read -r SESSION_KEY; do
+  SOURCE="unknown"
+  
+  # Check patterns
+  if [[ "$SESSION_KEY" == agent:main:main ]]; then
+    SOURCE="entrosana.com"
+  elif [[ "$SESSION_KEY" == *telegram* ]]; then
+    SOURCE="telegram"
+  elif [[ "$SESSION_KEY" == *cron* ]]; then
+    SOURCE="cron"
+  elif [[ "$SESSION_KEY" == *webchat* ]]; then
+    SOURCE="webchat"
+  fi
+  
+  SOURCE_COUNTS["$SOURCE"]=$((SOURCE_COUNTS["$SOURCE"] + 1))
+done
+
+# Print counts (we need to capture them differently since while loop creates subshell)
+echo "entrosana.com dashboard: $(openclaw sessions --json | jq -r '.sessions[] | .key' | grep -c "agent:main:main" || echo 0)"
+echo "Telegram sessions: $(openclaw sessions --json | jq -r '.sessions[] | .key' | grep -c "telegram" || echo 0)"
+echo "Cron jobs: $(openclaw sessions --json | jq -r '.sessions[] | .key' | grep -c "cron" || echo 0)"
+echo "Webchat sessions: $(openclaw sessions --json | jq -r '.sessions[] | .key' | grep -c "webchat" || echo 0)"
+echo "Other/unknown: $(openclaw sessions --json | jq -r '.sessions[] | .key' | grep -v "agent:main:main" | grep -v "telegram" | grep -v "cron" | grep -v "webchat" | wc -l || echo 0)"

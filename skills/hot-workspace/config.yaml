@@ -1,0 +1,25 @@
+# Hot Workspace Configuration
+
+# Prewarm settings
+prewarm:
+  enabled: true
+  patterns:
+    - "thesis*.md"
+    - "memory/*.md"
+    - "AGENTS.md"
+    - "SOUL.md"
+    - "USER.md"
+    - "TOOLS.md"
+    - "HEARTBEAT.md"
+    - "*.md"
+
+# Scratch space settings
+scratch:
+  enabled: true
+  location: "/tmp"  # Use /tmp for safety, /dev/shm for speed
+  size_mb: 512
+
+# File access monitoring
+monitor:
+  enabled: false
+  log_file: ".hot-workspace-access.log"

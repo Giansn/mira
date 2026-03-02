@@ -1,0 +1,50 @@
+#!/bin/bash
+# Cooperative session cleanup - works WITH OpenClaw's session management
+
+echo "=== Cooperative Session Management ==="
+echo "Working WITH OpenClaw's session system"
+echo ""
+
+# Step 1: Use OpenClaw's built-in cleanup
+echo "1. Running OpenClaw's session cleanup..."
+openclaw sessions cleanup --dry-run --json | jq '. | {mode, beforeCount, afterCount, wouldMutate}'
+
+echo ""
+echo "2. Current sessions (OpenClaw's view):"
+openclaw sessions --json | jq -r '.sessions[] | "  \(.key) - Age: \(.ageMs / 1000 / 60 | floor) minutes"'
+
+echo ""
+echo "3. Our session mapping:"
+if [ -f "session-map.json" ]; then
+  jq -r '.sessions | to_entries[] | "  \(.key) → \(.value)"' session-map.json
+else
+  echo "  No session mapping found"
+fi
+
+echo ""
+echo "=== Recommendations ==="
+
+# Check for duplicate Telegram sessions
+TELEGRAM_COUNT=$(openclaw sessions --json | jq '.sessions[] | select(.key | contains("telegram")) | .key' | wc -l)
+if [ "$TELEGRAM_COUNT" -gt 1 ]; then
+  echo "⚠️  Found $TELEGRAM_COUNT Telegram sessions. This may cause 'Gianluca Gianluca' in web UI."
+  echo "   Consider:"
+  echo "   - Waiting for OpenClaw's automatic cleanup (sessions age out)"
+  echo "   - Or manually cleaning with: openclaw sessions cleanup --enforce --fix-missing"
+fi
+
+# Check session ages
+OLD_SESSIONS=$(openclaw sessions --json | jq '.sessions[] | select(.ageMs > 3600000) | .key' | wc -l)
+if [ "$OLD_SESSIONS" -gt 0 ]; then
+  echo "📊 $OLD_SESSIONS sessions older than 1 hour. OpenClaw may clean these soon."
+fi
+
+echo ""
+echo "=== How OpenClaw Session Management Works ==="
+echo "• Creates sessions for each connection (Telegram, web UI, etc.)"
+echo "• Tracks session activity and age"
+echo "• Automatically cleans up old sessions (configurable)"
+echo "• Persists sessions for continuity"
+echo ""
+echo "Our role: Monitor, understand, and work WITH this system."
+echo "Don't fight it - understand it."
