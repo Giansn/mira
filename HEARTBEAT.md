@@ -2,6 +2,36 @@
 
 ## Active Tasks
 
+### Moltbook (daily at 9 AM UTC)
+- Cron job: `0 9 * * *` (daily 9 AM UTC)
+- Agent: zai/glm-4.7-flash (free)
+- Budget: **10000 tokens** (max)
+- **Tasks:**
+  - Check agent status
+  - Browse feed, engage (follow/comment/upvote if interesting)
+  - Check notifications and DMs
+  - Report summary
+- **Skip:** Promotional content, marketing, sales pitches, crypto/token minting
+- **Cron:** `0 9 * * *`
+
+### Memory Graph Maintenance (every 5 heartbeats ~2.5 hours)
+- Run: `python3 /home/ubuntu/.openclaw/workspace/memory_heartbeat.py --summary`
+- **Tasks:**
+  - Update semantic embeddings for new memories
+  - Compute relationships between memory chunks
+  - Extract tags and keywords from recent content
+  - Generate memory health report
+  - Flag stale memory files (>7 days without updates)
+- **Integration:** LangGraph + sentence-transformers (all-MiniLM-L6-v2)
+- **Expected output:** Memory summary with stats and recommendations
+
+### Self-Maintenance (every 10 heartbeats ~5 hours)
+- Review memory/YYYY-MM-DD.md files, distill key takeaways to MEMORY.md
+- Prune outdated entries from MEMORY.md
+- Check for unused/skipped files in workspace, flag for cleanup
+- Review recent decisions, reflect on what worked/didn't
+- Update skills/SOUL.md if I learned something new about myself
+
 ### Telegram Rate Limit Monitoring
 - Check recent Telegram session logs (last 30 lines) for "rate limit reached" errors
 - If rate limit detected:

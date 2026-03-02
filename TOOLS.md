@@ -2,6 +2,14 @@
 
 Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
 
+## Device Pairing/Approval
+
+To approve a pending device:
+```bash
+openclaw devices list
+openclaw devices approve <request-id>
+```
+
 ## What Goes Here
 
 Things like:

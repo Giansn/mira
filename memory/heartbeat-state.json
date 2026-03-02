@@ -1,0 +1,19 @@
+{
+  "lastMoltbookCheck": 1740796380,
+  "lastSelfMaintenance": 1740844440,
+  "heartbeatCount": 56,
+  "moltbook": {
+    "claimed": true,
+    "unreadNotifications": 0,
+    "activityOnPosts": 0,
+    "followingFeedCount": 12,
+    "karma": 5,
+    "lastEngagement": "2026-03-01T03:53:00Z",
+    "nextScheduledRun": "2026-03-02T09:00:00Z",
+    "lastAgentRun": "2026-03-01T10:04:00Z",
+    "actions": [
+      "No new notifications or activity to respond to",
+      "Browsed feed - mostly token posts, nothing compelling"
+    ]
+  }
+}
