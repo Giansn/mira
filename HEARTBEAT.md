@@ -32,6 +32,16 @@
 - Review recent decisions, reflect on what worked/didn't
 - Update skills/SOUL.md if I learned something new about myself
 
+### Async Agent Pattern Processing (every heartbeat)
+- Run: `python3 /home/ubuntu/.openclaw/workspace/skills/async-agent-pattern/process_queue.py --type claude --max 3`
+- **Tasks:**
+  - Process queued Claude messages (2 minute timeout per message)
+  - Process browser automation requests (when browser available)
+  - Process background jobs (10 minute timeout per job)
+  - Process API calls (service-specific timeouts)
+- **Integration:** Externalizes state for session-fragile operations
+- **Expected output:** Operations completed, results stored, state checkpoints updated
+
 ### Telegram Rate Limit Monitoring
 - Check recent Telegram session logs (last 30 lines) for "rate limit reached" errors
 - If rate limit detected:
