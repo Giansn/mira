@@ -1,0 +1,27 @@
+external-terminal-access.skill - Access external terminals and shared sessions
+
+STATUS: SSH port 22 open, Claude Code installed, Termius links processable
+
+TOOLS:
+1. Link processor: python3 skills/external-terminal-access/scripts/process_link.py <termius_link>
+2. SSH access: ssh ubuntu@172.31.14.61
+3. Claude terminal: claude (after SSH) or ssh ubuntu@172.31.14.61 -t 'claude'
+4. Web interfaces: http://172.31.14.61:18789/ (OpenClaw), http://172.31.14.61:5000/ (memory viz)
+
+TERMIUS LINK PROCESSED:
+- Peer ID: c2fba201-b758-4eef-a4a6-611039f54d9e
+- Terminal: Mira (1)
+- Connection: da365542-7765-490e-9c61-1f9dc1f83703
+- Version: 2.0.0
+
+ACCESS METHODS:
+1. Join Termius multiplayer session via link
+2. SSH directly: ssh ubuntu@172.31.14.61
+3. Web UI: OpenClaw Control at port 18789
+
+CLAUDE ACCESS:
+- Installed: /home/ubuntu/.npm-global/bin/claude
+- Workspace: /home/ubuntu/.openclaw/workspace (trusted)
+- Tested: Working (responds to messages)
+
+Note: I can't click links directly but can process them and provide access instructions.
