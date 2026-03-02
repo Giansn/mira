@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-036",
+  "name": "monitor-only-v35",
+  "depth": 1,
+  "parent_id": "branch-007",
+  "config": {
+    "name": "monitor-only-v35",
+    "prewarm": "none",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 256,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8043751886917702,
+      "innovation": 0.7314744377441569,
+      "risk_awareness": 1.0,
+      "overall": 0.8452832088119756
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.867821850656086,
+      "overall": 0.8919554626640215
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Is the complexity worth the speedup?",
+        "What happens when none fills up?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.8668024154452121
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.535084"
+}

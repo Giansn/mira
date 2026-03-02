@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-064",
+  "name": "scratch-tmp-v63",
+  "depth": 3,
+  "parent_id": "branch-046",
+  "config": {
+    "name": "scratch-tmp-v63",
+    "prewarm": "none",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8250893469857646,
+      "innovation": 0.8525048023230063,
+      "risk_awareness": 0.5,
+      "overall": 0.7258647164362569
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.8339934729694396,
+      "overall": 0.8084983682423599
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does none prewarm actually help?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.30000000000000004,
+      "philosophical_score": 0.6057370647966597
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.537812"
+}

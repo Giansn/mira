@@ -1,0 +1,164 @@
+{
+  "timestamp": "2026-03-01T22:53:19.893453",
+  "stats": {
+    "total_memories": 40,
+    "total_tags": 21,
+    "total_keywords": 508,
+    "total_relationships": 262,
+    "semantic_model": true
+  },
+  "top_tags": [
+    "cron",
+    "notion",
+    "documentation",
+    "openclaw",
+    "api",
+    "telegram",
+    "error",
+    "ai",
+    "todo",
+    "heartbeat",
+    "success",
+    "system",
+    "communication",
+    "model",
+    "thesis",
+    "monitoring",
+    "security",
+    "academic",
+    "scheduling",
+    "integration"
+  ],
+  "top_keywords": [
+    [
+      "telegram",
+      7
+    ],
+    [
+      "heartbeat",
+      6
+    ],
+    [
+      "notion",
+      6
+    ],
+    [
+      "gianluca",
+      5
+    ],
+    [
+      "config",
+      5
+    ],
+    [
+      "transcription",
+      5
+    ],
+    [
+      "audio",
+      5
+    ],
+    [
+      "system",
+      4
+    ],
+    [
+      "problem",
+      4
+    ],
+    [
+      "cron",
+      4
+    ],
+    [
+      "switzerland",
+      3
+    ],
+    [
+      "soziale arbeit",
+      3
+    ],
+    [
+      "installed",
+      3
+    ],
+    [
+      "kann",
+      3
+    ],
+    [
+      "heartbeat_ok",
+      3
+    ]
+  ],
+  "most_connected": [
+    {
+      "id": "MEMORY.md_4",
+      "source": "MEMORY.md",
+      "connections": 16,
+      "tags": [
+        "heartbeat",
+        "cron",
+        "monitoring",
+        "scheduling",
+        "api",
+        "telegram",
+        "integration",
+        "security",
+        "communication"
+      ]
+    },
+    {
+      "id": "memory_2025-02-25.md_2",
+      "source": "memory/2025-02-25.md",
+      "connections": 15,
+      "tags": [
+        "todo",
+        "heartbeat",
+        "monitoring",
+        "error"
+      ]
+    },
+    {
+      "id": "MEMORY.md_6",
+      "source": "MEMORY.md",
+      "connections": 14,
+      "tags": [
+        "heartbeat",
+        "monitoring",
+        "api",
+        "telegram",
+        "integration",
+        "communication",
+        "todo"
+      ]
+    },
+    {
+      "id": "memory_2025-02-25.md_1",
+      "source": "memory/2025-02-25.md",
+      "connections": 13,
+      "tags": [
+        "heartbeat",
+        "monitoring",
+        "success",
+        "api",
+        "telegram",
+        "integration",
+        "error",
+        "communication"
+      ]
+    },
+    {
+      "id": "MEMORY.md_11",
+      "source": "MEMORY.md",
+      "connections": 12,
+      "tags": [
+        "success",
+        "cron",
+        "scheduling",
+        "error",
+        "todo"
+      ]
+    }
+  ]
+}

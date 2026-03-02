@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-006",
+  "name": "full-devshm-v5",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "full-devshm-v5",
+    "prewarm": "cat",
+    "scratch": "/dev/shm",
+    "risk": "high",
+    "scratch_size": 256,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.7543164550069569,
+      "innovation": 0.7299754287580932,
+      "risk_awareness": 0.19999999999999996,
+      "overall": 0.5614306279216833
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.2,
+      "fairness": 0.7934005423964079,
+      "overall": 0.723350135599102
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does cat prewarm actually help?",
+        "What happens when /dev/shm fills up?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.6287245712976421
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.531512"
+}

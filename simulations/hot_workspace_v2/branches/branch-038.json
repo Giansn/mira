@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-038",
+  "name": "prewarm-cat-v37",
+  "depth": 1,
+  "parent_id": "branch-001",
+  "config": {
+    "name": "prewarm-cat-v37",
+    "prewarm": "cat",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 1024,
+    "monitor": false,
+    "prewarm_files": "memory/*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8204352861839315,
+      "innovation": 0.7520573143397207,
+      "risk_awareness": 1.0,
+      "overall": 0.857497533507884
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.8173196383027813,
+      "overall": 0.8793299095756953
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when none fills up?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.6199661140675937
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.535293"
+}

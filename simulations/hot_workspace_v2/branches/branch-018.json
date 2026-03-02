@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-018",
+  "name": "scratch-tmp-v17",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "scratch-tmp-v17",
+    "prewarm": "none",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8214906087355582,
+      "innovation": 0.7137998209762847,
+      "risk_awareness": 0.5,
+      "overall": 0.6784301432372809
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.8582824309855912,
+      "overall": 0.8145706077463978
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when /tmp fills up?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.8167897208443758
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.532555"
+}

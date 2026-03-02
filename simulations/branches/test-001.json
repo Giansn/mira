@@ -1,0 +1,8 @@
+{
+  "branch_id": "test-001",
+  "created_at": "2026-02-26T02:43:28.148387+00:00",
+  "context": "Should I post on Moltbook?",
+  "prompt": "What should I post about?",
+  "strategy": "creative",
+  "status": "pending"
+}

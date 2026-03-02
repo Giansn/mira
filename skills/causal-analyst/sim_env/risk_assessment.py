@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Risk Assessment for offline AEAP (Atlas) — audit-only, offline-deterministic."""
+"""Risk Assessment for offline AEAP (Atlas) — audit-only, offline-deterministic with compact mode by default."""
 import json
 from typing import Optional, Dict
 
@@ -27,7 +27,8 @@ def _score_from_flags(flags: list) -> float:
     return s
 
 
-def assess_run(run: dict, thresholds: Optional[dict] = None) -> dict:
+def assess_run(run: dict, thresholds: Optional[dict] = None, compact_level: float = 0.0, context_budget: float = 1.0) -> dict:
+    """Assess a Run. compact_level 0.0..1.0 controls verbosity; context_budget 0.0..1.0 controls context in summaries."""
     if thresholds is None:
         thresholds = DEFAULT_THRESHOLDS
 
@@ -60,13 +61,25 @@ def assess_run(run: dict, thresholds: Optional[dict] = None) -> dict:
     else:
         category = "Critical"
 
-    risk_notes = (
-        f"Deterministic offline risk: score={risk_score:.3f}, "
-        f"category={category}, conf={confidence:.2f}; "
-        f"flags={risk_flags}"
-    )
+    # Build risk_notes with compact level control
+    if compact_level <= 0.25:
+        risk_notes = (
+            f"Deterministic offline risk: score={risk_score:.3f}, category={category}, "
+            f"flags={risk_flags}, conf={confidence:.2f}"
+        )
+    elif compact_level <= 0.5:
+        risk_notes = (
+            f"Risk {risk_score:.3f} ({category}) with {confidence:.2f} confidence"
+        )
+    else:
+        risk_notes = None  # most compact
 
-    # policy action is informational; no automatic gating in batch A
+    # Summary line respects context budget
+    if context_budget >= 0.5:
+        summary = f"Run {run.get('run_id','?')} | seed {run.get('seed')} | cmd {run.get('command','')} | risk {risk_score:.3f} ({category})"
+    else:
+        summary = f"Run {run.get('run_id','?')} | risk {risk_score:.3f} ({category})"
+
     risk_action = "PROCEED"
 
     return {
@@ -74,8 +87,11 @@ def assess_run(run: dict, thresholds: Optional[dict] = None) -> dict:
         "risk_category": category,
         "risk_notes": risk_notes,
         "risk_action": risk_action,
+        "summary": summary,
         "adjustment_meta": {
             "adaptive": False,
-            "thresholds": thresholds
+            "thresholds": thresholds,
+            "compact_level": round(compact_level, 2),
+            "context_budget": round(context_budget, 2)
         }
     }

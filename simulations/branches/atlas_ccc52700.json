@@ -1,0 +1,12 @@
+{
+  "branch_id": "atlas_ccc52700",
+  "created_at": "2026-02-26T03:08:11.873229+00:00",
+  "context": "Adaptive: factual",
+  "question": "Factual profile: token_density=0.9, cache_aggressiveness=0.9, ask_threshold=0.9. Goal: max speed. What specific optimizations apply?",
+  "strategy": "conservative",
+  "prompt": "Give the shortest, safest, most risk-averse answer. Minimize exposure.\n\nCONTEXT:\nAdaptive: factual\n\nQUESTION:\nFactual profile: token_density=0.9, cache_aggressiveness=0.9, ask_threshold=0.9. Goal: max speed. What specific optimizations apply?\n\nRespond to the question using the conservative reasoning strategy. \nAfter your response, include a brief self-assessment: \n- Your confidence (0.0-1.0)\n- Key assumptions you made\n- What would change your mind",
+  "pre_confidence": 0.5,
+  "context_hash": "0574050248e3a412",
+  "status": "pending",
+  "spawned_by": "atlas_helper"
+}

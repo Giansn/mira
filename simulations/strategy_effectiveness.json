@@ -1,0 +1,9 @@
+{
+  "devil_advocate": {
+    "runs": 1,
+    "total_delta": 0.4,
+    "wins": 1,
+    "avg_delta": 0.4,
+    "win_rate": 1.0
+  }
+}

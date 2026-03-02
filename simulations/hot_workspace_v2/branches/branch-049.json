@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-049",
+  "name": "scratch-devshm-v48",
+  "depth": 2,
+  "parent_id": "branch-028",
+  "config": {
+    "name": "scratch-devshm-v48",
+    "prewarm": "none",
+    "scratch": "/dev/shm",
+    "risk": "high",
+    "scratch_size": 512,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8557595815901575,
+      "innovation": 0.6575590350207452,
+      "risk_awareness": 0.19999999999999996,
+      "overall": 0.5711062055369676
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.2,
+      "fairness": 0.9136419858169392,
+      "overall": 0.7534104964542349
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when /dev/shm fills up?",
+        "Does this work across all platforms?"
+      ],
+      "depth_insight": 0.2,
+      "philosophical_score": 0.8889787507762985
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.536556"
+}

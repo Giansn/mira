@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-053",
+  "name": "prewarm-cat-v52",
+  "depth": 1,
+  "parent_id": "branch-001",
+  "config": {
+    "name": "prewarm-cat-v52",
+    "prewarm": "cat",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 256,
+    "monitor": false,
+    "prewarm_files": "*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.819996812944823,
+      "innovation": 0.756141490470385,
+      "risk_awareness": 1.0,
+      "overall": 0.8587127678050693
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.8418151821532313,
+      "overall": 0.8854537955383078
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Does cat prewarm actually help?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.7174300621952978
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.536936"
+}

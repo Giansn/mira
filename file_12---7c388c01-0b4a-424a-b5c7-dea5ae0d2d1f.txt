@@ -1,0 +1,2 @@
+Okay, so what I need you to do now is if I play all your message from you and it ends,
+it starts playing another one. Can you adjust it? So if I play a message, it just plays this and then stops.

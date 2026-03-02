@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-037",
+  "name": "prewarm-fadvise-v36",
+  "depth": 1,
+  "parent_id": "branch-006",
+  "config": {
+    "name": "prewarm-fadvise-v36",
+    "prewarm": "fadvise",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 1024,
+    "monitor": true,
+    "prewarm_files": "*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8548263648955712,
+      "innovation": 0.6918361674697299,
+      "risk_awareness": 1.0,
+      "overall": 0.8488875107884337
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.9353324927288703,
+      "overall": 0.9088331231822175
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Does fadvise prewarm actually help?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.7951939527949003
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.535208"
+}

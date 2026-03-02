@@ -1,0 +1,23 @@
+#!/usr/bin/expect -f
+
+# Start Claude
+spawn claude
+
+# Wait for security prompt
+expect "Security guide"
+
+# Send "1" and Enter
+send "1\r"
+
+# Wait for Claude prompt
+expect "How can I help"
+
+# Send test message
+send "Hello from keyboard simulation\r"
+
+# Wait a bit
+sleep 2
+
+# Exit
+send "\x03"  # Ctrl+C
+expect eof

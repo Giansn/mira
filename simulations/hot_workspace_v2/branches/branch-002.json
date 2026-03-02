@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-002",
+  "name": "full-devshm-v1",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "full-devshm-v1",
+    "prewarm": "cat",
+    "scratch": "/dev/shm",
+    "risk": "high",
+    "scratch_size": 512,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8358784974781862,
+      "innovation": 0.8700769485745576,
+      "risk_awareness": 0.19999999999999996,
+      "overall": 0.6353184820175812
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.2,
+      "fairness": 0.8916826132614779,
+      "overall": 0.7479206533153695
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when /dev/shm fills up?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.8289477151995708
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.530998"
+}

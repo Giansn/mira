@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-015",
+  "name": "scratch-tmp-v14",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "scratch-tmp-v14",
+    "prewarm": "none",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 512,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8446069736561419,
+      "innovation": 0.7652613273988891,
+      "risk_awareness": 0.5,
+      "overall": 0.7032894336850104
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.77382045390245,
+      "overall": 0.7934551134756125
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when /tmp fills up?",
+        "Does this work across all platforms?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.7732028511906301
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.532319"
+}

@@ -1,0 +1,12 @@
+{
+  "branch_id": "atlas_24a0d24b",
+  "created_at": "2026-02-26T03:08:16.714030+00:00",
+  "context": "Adaptive: research",
+  "question": "Research profile: token_density=0.5, cache_aggressiveness=0.5, ask_threshold=0.6. Goal: balanced. What specific optimizations apply?",
+  "strategy": "expert",
+  "prompt": "Respond as a domain expert - thorough, precise, nuanced, cite specifics.\n\nCONTEXT:\nAdaptive: research\n\nQUESTION:\nResearch profile: token_density=0.5, cache_aggressiveness=0.5, ask_threshold=0.6. Goal: balanced. What specific optimizations apply?\n\nRespond to the question using the expert reasoning strategy. \nAfter your response, include a brief self-assessment: \n- Your confidence (0.0-1.0)\n- Key assumptions you made\n- What would change your mind",
+  "pre_confidence": 0.5,
+  "context_hash": "07ea9d11f4e1ca34",
+  "status": "pending",
+  "spawned_by": "atlas_helper"
+}

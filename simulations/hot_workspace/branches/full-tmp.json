@@ -1,0 +1,40 @@
+{
+  "branch_id": "full-tmp",
+  "name": "Full: prewarm-fadvise + /tmp scratch",
+  "config": {
+    "branch_id": "full-tmp",
+    "name": "Full: prewarm-fadvise + /tmp scratch",
+    "prewarm_method": "fadvise",
+    "scratch_location": "/tmp",
+    "scratch_size_mb": 256,
+    "monitor_enabled": true,
+    "startup_cost_ms": 40,
+    "memory_overhead_mb": 0,
+    "persistence_risk": "medium",
+    "expected_speedup": "medium"
+  },
+  "timestamp": "2026-03-02T08:00:01.460312",
+  "evaluations": {
+    "atlas": {
+      "safety": 1.0,
+      "effectiveness": 0.8,
+      "complexity": "low"
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk_score": 0.5,
+      "speedup_value": 0.5,
+      "overall": 0.725
+    },
+    "socrates": {
+      "questions": [
+        "Does fadvise prewarming actually improve kernel cache hit rate?",
+        "What happens if /dev/shm fills up during a large build?",
+        "Is the startup cost of 40ms worth the speedup?",
+        "Does this work on non-Linux systems?"
+      ],
+      "wisdom_score": 0.7
+    }
+  }
+}

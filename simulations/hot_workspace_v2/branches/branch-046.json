@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-046",
+  "name": "monitor-only-v45",
+  "depth": 2,
+  "parent_id": "branch-037",
+  "config": {
+    "name": "monitor-only-v45",
+    "prewarm": "none",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 512,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8826303513432167,
+      "innovation": 0.6588082669473494,
+      "risk_awareness": 1.0,
+      "overall": 0.8471462060968554
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.882839586461093,
+      "overall": 0.8957098966152732
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when none fills up?",
+        "Does this work across all platforms?"
+      ],
+      "depth_insight": 0.2,
+      "philosophical_score": 0.8550613126116073
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.536296"
+}

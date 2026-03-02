@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-019",
+  "name": "full-tmp-v18",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "full-tmp-v18",
+    "prewarm": "cat",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8477115755102022,
+      "innovation": 0.8196425546678614,
+      "risk_awareness": 0.5,
+      "overall": 0.7224513767260211
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.8549723087311765,
+      "overall": 0.8137430771827942
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Does cat prewarm actually help?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.8285630143736007
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.532630"
+}

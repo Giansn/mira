@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-051",
+  "name": "prewarm-cat-v50",
+  "depth": 3,
+  "parent_id": "branch-046",
+  "config": {
+    "name": "prewarm-cat-v50",
+    "prewarm": "cat",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 1024,
+    "monitor": false,
+    "prewarm_files": "*.md,*.py"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8334092958869033,
+      "innovation": 0.6425000565073581,
+      "risk_awareness": 1.0,
+      "overall": 0.8253031174647538
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.9378389257750377,
+      "overall": 0.9094597314437594
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does cat prewarm actually help?",
+        "What happens when none fills up?"
+      ],
+      "depth_insight": 0.30000000000000004,
+      "philosophical_score": 0.6838563613291808
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.536728"
+}

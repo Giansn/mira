@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenClaw Memory Visualization Web Interface
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/.openclaw/workspace/memory-viz
+Environment="PATH=/home/ubuntu/.openclaw/workspace/memory-viz/venv/bin"
+ExecStart=/home/ubuntu/.openclaw/workspace/memory-viz/venv/bin/python app.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

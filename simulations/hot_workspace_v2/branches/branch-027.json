@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-027",
+  "name": "prewarm-mlock-v26",
+  "depth": 1,
+  "parent_id": "branch-004",
+  "config": {
+    "name": "prewarm-mlock-v26",
+    "prewarm": "mlock",
+    "scratch": "none",
+    "risk": "low",
+    "scratch_size": 1024,
+    "monitor": true,
+    "prewarm_files": "thesis*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8529150117401669,
+      "innovation": 0.8044868712102806,
+      "risk_awareness": 0.8,
+      "overall": 0.8191339609834826
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 0.8,
+      "fairness": 0.8553835885412637,
+      "overall": 0.8388458971353159
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when none fills up?",
+        "Does this work across all platforms?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.7164959588160627
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.534356"
+}

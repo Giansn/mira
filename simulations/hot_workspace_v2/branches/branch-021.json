@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-021",
+  "name": "prewarm-fadvise-v20",
+  "depth": 1,
+  "parent_id": "branch-009",
+  "config": {
+    "name": "prewarm-fadvise-v20",
+    "prewarm": "fadvise",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 256,
+    "monitor": false,
+    "prewarm_files": "thesis*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.7880445823928164,
+      "innovation": 0.8975467676461389,
+      "risk_awareness": 1.0,
+      "overall": 0.8951971166796517
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.8282482276635629,
+      "overall": 0.8820620569158907
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when none fills up?",
+        "Does this work across all platforms?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.8036548174096629
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.533766"
+}

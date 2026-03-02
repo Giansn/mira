@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-009",
+  "name": "full-tmp-v8",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "full-tmp-v8",
+    "prewarm": "cat",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 256,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8256683627375259,
+      "innovation": 0.7997520756407861,
+      "risk_awareness": 0.5,
+      "overall": 0.7084734794594373
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.9074949914101476,
+      "overall": 0.8268737478525369
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Is the complexity worth the speedup?",
+        "Does cat prewarm actually help?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.7904883070025025
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.531824"
+}

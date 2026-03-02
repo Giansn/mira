@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-075",
+  "name": "monitor-only-v74",
+  "depth": 1,
+  "parent_id": "branch-016",
+  "config": {
+    "name": "monitor-only-v74",
+    "prewarm": "none",
+    "scratch": "none",
+    "risk": "none",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8499095343297064,
+      "innovation": 0.6334578156266963,
+      "risk_awareness": 1.0,
+      "overall": 0.8277891166521343
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 1.0,
+      "fairness": 0.7159727412915584,
+      "overall": 0.8539931853228896
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when none fills up?",
+        "Does none prewarm actually help?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.8714781505609501
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.538720"
+}

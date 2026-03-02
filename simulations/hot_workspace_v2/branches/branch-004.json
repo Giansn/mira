@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-004",
+  "name": "full-tmp-v3",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "full-tmp-v3",
+    "prewarm": "cat",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8232809087860481,
+      "innovation": 0.68180280275939,
+      "risk_awareness": 0.5,
+      "overall": 0.6683612371818127
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.7185045399761673,
+      "overall": 0.7796261349940419
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when /tmp fills up?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.8339688598722601
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.531220"
+}

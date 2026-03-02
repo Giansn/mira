@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-045",
+  "name": "prewarm-mlock-v44",
+  "depth": 1,
+  "parent_id": "branch-004",
+  "config": {
+    "name": "prewarm-mlock-v44",
+    "prewarm": "mlock",
+    "scratch": "none",
+    "risk": "low",
+    "scratch_size": 512,
+    "monitor": false,
+    "prewarm_files": "memory/*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8381101136437422,
+      "innovation": 0.697613201489553,
+      "risk_awareness": 0.8,
+      "overall": 0.7785744383777651
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 0.8,
+      "fairness": 0.7549000158371946,
+      "overall": 0.8137250039592987
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "What happens when none fills up?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.6739476631969108
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.535906"
+}

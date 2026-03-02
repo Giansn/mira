@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-012",
+  "name": "prewarm-mlock-v11",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "prewarm-mlock-v11",
+    "prewarm": "mlock",
+    "scratch": "none",
+    "risk": "low",
+    "scratch_size": 256,
+    "monitor": true,
+    "prewarm_files": "thesis*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8107508598432456,
+      "innovation": 0.8745014347728461,
+      "risk_awareness": 0.8,
+      "overall": 0.8284174315386972
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 0.8,
+      "fairness": 0.9298108207412537,
+      "overall": 0.8574527051853134
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Does mlock prewarm actually help?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.7258388462811494
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.532078"
+}

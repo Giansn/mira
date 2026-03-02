@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-023",
+  "name": "full-devshm-v22",
+  "depth": 1,
+  "parent_id": "branch-005",
+  "config": {
+    "name": "full-devshm-v22",
+    "prewarm": "cat",
+    "scratch": "/dev/shm",
+    "risk": "high",
+    "scratch_size": 512,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8025277809643427,
+      "innovation": 0.6422765956430865,
+      "risk_awareness": 0.19999999999999996,
+      "overall": 0.5482681255358097
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.2,
+      "fairness": 0.7654906557778076,
+      "overall": 0.7163726639444519
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Is the complexity worth the speedup?",
+        "Does this work across all platforms?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.7981528965575803
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.534011"
+}

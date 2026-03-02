@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-050",
+  "name": "full-devshm-v49",
+  "depth": 1,
+  "parent_id": "branch-006",
+  "config": {
+    "name": "full-devshm-v49",
+    "prewarm": "cat",
+    "scratch": "/dev/shm",
+    "risk": "high",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.7740170013468068,
+      "innovation": 0.7400261286817484,
+      "risk_awareness": 0.19999999999999996,
+      "overall": 0.5713477100095185
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.2,
+      "fairness": 0.9341693296828146,
+      "overall": 0.7585423324207037
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Does cat prewarm actually help?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.7628095086164868
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.536637"
+}

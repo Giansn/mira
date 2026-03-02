@@ -1,0 +1,25 @@
+{
+  "models": {
+    "M2.5": {
+      "tps": 50,
+      "cost": "free (subscription)"
+    },
+    "M2.5-Lightning": {
+      "tps": 100,
+      "cost": "0.3/1.2 per 1M tokens"
+    },
+    "M2.1": {
+      "tps": 30,
+      "cost": "free (subscription)"
+    }
+  },
+  "strategies": [
+    "Bundle multiple operations into single prompts",
+    "Use Lightning for time-critical tasks only",
+    "Pre-warm context for faster subsequent responses"
+  ],
+  "recommendations": [
+    "Investigate Lightning model API access",
+    "Continue with current model, optimize prompt batching"
+  ]
+}

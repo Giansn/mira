@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-003",
+  "name": "scratch-tmp-v2",
+  "depth": 0,
+  "parent_id": null,
+  "config": {
+    "name": "scratch-tmp-v2",
+    "prewarm": "none",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 1024,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.7696590327217585,
+      "innovation": 0.8025665757606761,
+      "risk_awareness": 0.5,
+      "overall": 0.6907418694941448
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.736308482363859,
+      "overall": 0.7840771205909648
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does none prewarm actually help?",
+        "What happens when /tmp fills up?"
+      ],
+      "depth_insight": 0.0,
+      "philosophical_score": 0.7226358299727103
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.531118"
+}

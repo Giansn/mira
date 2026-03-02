@@ -1,0 +1,40 @@
+{
+  "branch_id": "branch-042",
+  "name": "prewarm-mlock-v41",
+  "depth": 1,
+  "parent_id": "branch-008",
+  "config": {
+    "name": "prewarm-mlock-v41",
+    "prewarm": "mlock",
+    "scratch": "none",
+    "risk": "low",
+    "scratch_size": 1024,
+    "monitor": true,
+    "prewarm_files": "memory/*.md"
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.7947151331071994,
+      "innovation": 0.7903989625084678,
+      "risk_awareness": 0.8,
+      "overall": 0.795038031871889
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.7,
+      "persistence_risk": 0.8,
+      "fairness": 0.9070862768465284,
+      "overall": 0.8517715692116321
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does mlock prewarm actually help?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.8056092260037386
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.535651"
+}

@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-026",
+  "name": "scratch-devshm-v25",
+  "depth": 1,
+  "parent_id": "branch-006",
+  "config": {
+    "name": "scratch-devshm-v25",
+    "prewarm": "none",
+    "scratch": "/dev/shm",
+    "risk": "high",
+    "scratch_size": 256,
+    "monitor": false
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8065367867375292,
+      "innovation": 0.7174768085250097,
+      "risk_awareness": 0.19999999999999996,
+      "overall": 0.5746711984208462
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.2,
+      "fairness": 0.7039002919972164,
+      "overall": 0.7009750729993041
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Does none prewarm actually help?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.6515585605454675
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.534277"
+}

@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-047",
+  "name": "full-tmp-v46",
+  "depth": 2,
+  "parent_id": "branch-021",
+  "config": {
+    "name": "full-tmp-v46",
+    "prewarm": "cat",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 512,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.8526548944255016,
+      "innovation": 0.6227786964203923,
+      "risk_awareness": 0.5,
+      "overall": 0.6584778636152979
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.8886687186837942,
+      "overall": 0.8221671796709485
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "Is the complexity worth the speedup?"
+      ],
+      "depth_insight": 0.2,
+      "philosophical_score": 0.6627546452735185
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.536387"
+}

@@ -1,0 +1,39 @@
+{
+  "branch_id": "branch-033",
+  "name": "full-tmp-v32",
+  "depth": 1,
+  "parent_id": "branch-003",
+  "config": {
+    "name": "full-tmp-v32",
+    "prewarm": "cat",
+    "scratch": "/tmp",
+    "risk": "medium",
+    "scratch_size": 1024,
+    "monitor": true
+  },
+  "evaluations": {
+    "atlas": {
+      "technical_completeness": 0.825442103839181,
+      "innovation": 0.6551310268615295,
+      "risk_awareness": 0.5,
+      "overall": 0.6601910435669035
+    },
+    "judge": {
+      "safety": 1.0,
+      "practicality": 0.9,
+      "persistence_risk": 0.5,
+      "fairness": 0.8794377965054812,
+      "overall": 0.8198594491263703
+    },
+    "socrates": {
+      "wisdom_questions": [
+        "Does this work across all platforms?",
+        "What happens when /tmp fills up?"
+      ],
+      "depth_insight": 0.1,
+      "philosophical_score": 0.791011964103235
+    }
+  },
+  "reflections": [],
+  "timestamp": "2026-02-26T04:39:40.534839"
+}

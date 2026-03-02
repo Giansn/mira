@@ -1,0 +1,74 @@
+{
+  "baseline": {
+    "name": "Baseline (no optimization)",
+    "judge_overall": 0.675,
+    "safety": 1.0,
+    "practicality": 0.7,
+    "persistence_risk": 1.0,
+    "speedup": 0,
+    "socrates_wisdom": 0.7
+  },
+  "prewarm-cat": {
+    "name": "Prewarm via cat",
+    "judge_overall": 0.7375,
+    "safety": 1.0,
+    "practicality": 0.7,
+    "persistence_risk": 1.0,
+    "speedup": 0.25,
+    "socrates_wisdom": 0.7
+  },
+  "prewarm-fadvise": {
+    "name": "Prewarm via fadvise",
+    "judge_overall": 0.7375,
+    "safety": 1.0,
+    "practicality": 0.7,
+    "persistence_risk": 1.0,
+    "speedup": 0.25,
+    "socrates_wisdom": 0.7
+  },
+  "scratch-devshm": {
+    "name": "Scratch in /dev/shm (512MB)",
+    "judge_overall": 0.65,
+    "safety": 1.0,
+    "practicality": 0.9,
+    "persistence_risk": 0.2,
+    "speedup": 0.5,
+    "socrates_wisdom": 0.7
+  },
+  "scratch-tmp": {
+    "name": "Scratch in /tmp (tmpfs)",
+    "judge_overall": 0.725,
+    "safety": 1.0,
+    "practicality": 0.9,
+    "persistence_risk": 0.5,
+    "speedup": 0.5,
+    "socrates_wisdom": 0.7
+  },
+  "full-devshm": {
+    "name": "Full: prewarm-cat + /dev/shm scratch",
+    "judge_overall": 0.7125,
+    "safety": 1.0,
+    "practicality": 0.9,
+    "persistence_risk": 0.2,
+    "speedup": 0.75,
+    "socrates_wisdom": 0.7
+  },
+  "full-tmp": {
+    "name": "Full: prewarm-fadvise + /tmp scratch",
+    "judge_overall": 0.725,
+    "safety": 1.0,
+    "practicality": 0.9,
+    "persistence_risk": 0.5,
+    "speedup": 0.5,
+    "socrates_wisdom": 0.7
+  },
+  "monitor-only": {
+    "name": "Monitor only (no prewarm/scratch)",
+    "judge_overall": 0.675,
+    "safety": 1.0,
+    "practicality": 0.7,
+    "persistence_risk": 1.0,
+    "speedup": 0,
+    "socrates_wisdom": 0.7
+  }
+}
