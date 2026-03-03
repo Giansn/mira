@@ -542,3 +542,116 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Commit:** `2c59d06` - "Add multi-model orchestrator skill"
 - **Files:** SKILL.md, multi_model_orchestrator.py, examples/basic_usage.py
 - **Status:** Implemented, tested, committed to GitHub
+
+## Entrosana.com Dashboard Connection Setup (2026-03-02)
+
+### **Architecture:**
+1. **OpenClaw Gateway**: Port 18789 (local)
+2. **NGINX Reverse Proxy**: Port 443 (HTTPS) → Port 18789
+3. **DNS**: entrosana.com → 18.225.98.79 (EC2 public IP)
+4. **SSL**: Let's Encrypt certificate via Certbot
+
+### **Firewall Layers (All Must Allow):**
+
+#### **1. AWS Security Group (EC2 Level)**
+- **Port 443**: Allow 0.0.0.0/0 (HTTPS)
+- **Port 18789**: Allow specific IPs or 0.0.0.0/0
+- **Check**: EC2 → Security Groups → Inbound Rules
+
+#### **2. AWS Network ACL (Subnet Level - STATEFUL)**
+- **INBOUND**: Must allow port 443 AND destination port (18789 after proxy)
+- **OUTBOUND**: Must allow ephemeral ports (1024-65535) for responses
+- **Common Issue**: Rule 101 too restrictive (only port 443, blocks 18789)
+- **Fix**: Change to "All Traffic" or add rule for port 18789
+- **Check**: VPC → Network ACLs → Associated with subnet
+
+#### **3. Instance Firewall (UFW)**
+- **Port 443**: `sudo ufw allow 443/tcp`
+- **Port 18789**: `sudo ufw allow 18789/tcp`
+- **Check**: `sudo ufw status verbose`
+- **Default**: deny (incoming) - must explicitly allow ports
+
+### **NGINX Configuration:**
+```
+server {
+    listen 443 ssl;
+    server_name entrosana.com;
+    ssl_certificate /etc/letsencrypt/live/entrosana.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/entrosana.com/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:18789;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # WebSocket timeouts
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+        proxy_connect_timeout 10s;
+    }
+}
+```
+
+### **Diagnostic Commands:**
+
+#### **Check Connectivity:**
+```bash
+# Test local gateway
+curl http://localhost:18789/
+
+# Test NGINX locally
+curl -k -H "Host: entrosana.com" https://localhost/
+
+# Test public access (from server)
+curl -I https://entrosana.com/  # Will timeout if self-connection issue
+
+# Check UFW
+sudo ufw status verbose
+
+# Check listening ports
+sudo netstat -tlnp | grep ":443\|:18789"
+```
+
+#### **Check AWS Configuration:**
+- **Security Group**: Port 443 allows 0.0.0.0/0
+- **NACL**: Both inbound AND outbound allow traffic
+- **Route Table**: 0.0.0.0/0 → Internet Gateway
+
+### **Common Error Patterns:**
+
+#### **"disconnected (1006): no reason"**
+- WebSocket connection failing
+- Check NGINX WebSocket headers (`Upgrade`, `Connection`)
+- Check gateway WebSocket support
+
+#### **"net::ERR_CONNECTION_TIMED_OUT"**
+- Firewall blocking at some layer
+- Check all 3 firewalls: Security Group, NACL, UFW
+- NACL outbound ephemeral ports often missed
+
+#### **No errors but no connection**
+- NACL inbound too restrictive (only port 443, blocks proxied port 18789)
+- UFW missing port 443 rule
+
+### **Quick Fix Checklist:**
+1. ✅ **Security Group**: Port 443 allows 0.0.0.0/0
+2. ✅ **NACL Inbound**: Allows destination port (18789 after proxy)
+3. ✅ **NACL Outbound**: Allows ephemeral ports (1024-65535)
+4. ✅ **UFW**: `sudo ufw allow 443/tcp`
+5. ✅ **NGINX**: Running and configured
+6. ✅ **Gateway**: Running on port 18789
+
+### **Self-Repair Protocol:**
+If dashboard goes down:
+1. Run diagnostic commands above
+2. Check each firewall layer
+3. Most likely: NACL outbound or UFW port 443
+4. Apply fixes from this memory entry
+
+**Token**: `1f3c0559f9362ff5ff458c69eed348f6df5a7ec55bbc1287`
+**URL**: `https://entrosana.com/#token=TOKEN`

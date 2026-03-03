@@ -22,7 +22,7 @@
   - Extract tags and keywords from recent content
   - Generate memory health report
   - Flag stale memory files (>7 days without updates)
-- **Integration:** LangGraph + sentence-transformers (all-MiniLM-L6-v2)
+- **Integration:** LangGraph + sentence-transformers (intfloat/e5-small-v2)
 - **Expected output:** Memory summary with stats and recommendations
 
 ### Self-Maintenance (every 10 heartbeats ~5 hours)
