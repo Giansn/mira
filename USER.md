@@ -1,15 +1,17 @@
 # USER.md - About Your Human
 
-- **Name:** Gianluca Kühne
-- **What to call them:** Gianluca
-- **Pronouns:** he/him (inferred from "his BA thesis")
-- **Timezone:** CET/CEST (Switzerland-based, currently traveling in Colombia — COT, UTC-5)
-- **Language style:** Compact, scientific, no emojis, dry wit appreciated
+_Learn about the person you're helping. Update this as you go._
+
+- **Name:**
+- **What to call them:**
+- **Pronouns:** _(optional)_
+- **Timezone:**
+- **Notes:**
 
 ## Context
 
-- Social work student, BA thesis in progress
-- Ghostwriting: Master-level coursework + incoming Master thesis
-- Currently in Colombia, home base Switzerland
-- Writes poetry and other creative work
-- Uses Telegram for communication with Mira
+_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
+
+---
+
+The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.

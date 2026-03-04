@@ -64,12 +64,18 @@ class EnhancedMemoryGraph:
         self.semantic_model = None
         if SEMANTIC_AVAILABLE:
             try:
-                # Use a lightweight model
-                self.semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
-                print("Semantic model loaded: all-MiniLM-L6-v2")
+                # Use E5-small-v2 (better multilingual, instruction-aware)
+                self.semantic_model = SentenceTransformer('intfloat/e5-small-v2')
+                print("Semantic model loaded: intfloat/e5-small-v2 (E5-small-v2)")
             except Exception as e:
-                print(f"Failed to load semantic model: {e}")
-                self.semantic_model = None
+                print(f"Failed to load E5 model: {e}")
+                # Fallback to all-MiniLM-L6-v2
+                try:
+                    self.semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
+                    print("Fallback semantic model loaded: all-MiniLM-L6-v2")
+                except Exception as e2:
+                    print(f"Failed to load fallback model: {e2}")
+                    self.semantic_model = None
         
         # Keyword extraction patterns
         self.keyword_patterns = [
@@ -83,6 +89,33 @@ class EnhancedMemoryGraph:
             'the', 'and', 'to', 'of', 'a', 'in', 'is', 'that', 'for', 'on', 
             'with', 'as', 'by', 'an', 'be', 'this', 'or', 'at', 'from', 'but',
             'not', 'are', 'it', 'if', 'you', 'was', 'we', 'have', 'has', 'had'
+        }
+        
+        # Tag rules for automatic tagging (based on memory_tagger.py)
+        self.tag_rules = {
+            'voice': ["voice", "accent", "tts", "audio", "whisper", "transcription", "speech", "sound"],
+            'disk': ["disk", "space", "gb", "cleanup", "cache", "delete", "storage", "temp", "tmp"],
+            'cron': ["cron", "schedule", "daily", "job", "automated", "scheduled", "cronjob"],
+            'heartbeat': ["heartbeat", "monitoring", "check", "health", "status"],
+            'audio': ["audio", "ogg", "mp3", "sound", "listen", "hear", "play"],
+            'tts': ["tts", "text-to-speech", "synthes", "voice"],
+            'transcription': ["transcription", "whisper", "speech-to-text", "transcribe"],
+            'cleanup': ["cleanup", "delete", "remove", "prune", "optimize", "free", "space"],
+            'decision': ["decision", "choose", "option", "select", "prefer"],
+            'error': ["error:", "failed to", "could not", "unable to", "traceback", "exception:", 
+                      "crash", "fatal", "segmentation fault", "syntax error", "import error"],
+            'success': ["success", "completed", "working", "fixed", "resolved", "successful"],
+            'todo': ["todo", "task", "pending", "need", "waiting", "outstanding"],
+            'system': ["system", "status", "monitor", "performance", "optimize", "configuration"],
+            'memory': ["memory", "flush", "compaction", "recall", "remember", "embedding", "search"],
+            'conversation': ["conversation", "chat", "discuss", "talk", "message", "reply", "response"],
+            'gpu': ["gpu", "cuda", "nvidia", "gpu", "acceleration", "torch"],
+            'cpu': ["cpu", "processor", "compute", "performance"],
+            'network': ["network", "internet", "api", "http", "web", "url"],
+            'security': ["security", "auth", "password", "token", "key", "access"],
+            'development': ["development", "code", "script", "program", "implementation", "prototype"],
+            'question': ["question", "ask", "query", "what", "how", "why"],
+            'answer': ["answer", "response", "reply", "solution", "explanation"],
         }
         
         # Initialize
@@ -133,14 +166,15 @@ class EnhancedMemoryGraph:
         return list(keywords)[:20]  # Limit to top 20
     
     def _extract_tags_from_content(self, content: str) -> List[str]:
-        """Extract tags from content (beyond just #hashtags)."""
+        """Extract tags from content using hashtags, patterns, and keyword rules."""
         tags = set()
+        content_lower = content.lower()
         
-        # Extract explicit hashtags
+        # 1. Extract explicit hashtags
         hashtags = re.findall(r'#(\w+)', content)
         tags.update(hashtags)
         
-        # Extract from common patterns in our memory files
+        # 2. Extract from common patterns in our memory files (legacy patterns)
         patterns = [
             (r'(?:BA|MA|PhD)[-\s]?(?:thesis|Thesis)', ['thesis', 'academic']),
             (r'OpenClaw', ['openclaw', 'system']),
@@ -158,17 +192,31 @@ class EnhancedMemoryGraph:
             if re.search(pattern, content, re.IGNORECASE):
                 tags.update(tag_list)
         
-        # Add content-type tags
-        if any(word in content.lower() for word in ['error', 'failed', 'issue', 'problem']):
+        # 3. Apply comprehensive tag rules based on keyword matching
+        for tag, keywords in self.tag_rules.items():
+            for keyword in keywords:
+                if keyword in content_lower:
+                    tags.add(tag)
+                    break  # One keyword match is enough for the tag
+        
+        # 4. Ensure backward compatibility with content-type tags
+        # (These are already covered by tag_rules, but keep for safety)
+        # Improved error detection: look for actual error patterns, not just the word "error"
+        actual_error_patterns = [
+            'error:', 'Error:', 'Traceback', 'failed to', 'could not',
+            'unable to', 'crash', 'fatal error', 'segmentation fault',
+            'syntax error', 'import error', '[ERROR]'
+        ]
+        if any(pattern.lower() in content_lower for pattern in actual_error_patterns):
             tags.add('error')
         
-        if any(word in content.lower() for word in ['todo', 'task', 'pending', 'need']):
+        if any(word in content_lower for word in ['todo', 'task', 'pending', 'need']):
             tags.add('todo')
         
-        if any(word in content.lower() for word in ['success', 'working', 'fixed', 'resolved']):
+        if any(word in content_lower for word in ['success', 'working', 'fixed', 'resolved']):
             tags.add('success')
         
-        if any(word in content.lower() for word in ['security', 'audit', 'warning', 'risk']):
+        if any(word in content_lower for word in ['security', 'audit', 'warning', 'risk']):
             tags.add('security')
         
         return list(tags)

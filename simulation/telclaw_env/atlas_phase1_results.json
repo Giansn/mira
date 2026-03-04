@@ -1,4 +1,0 @@
-  ,
-  "stable": true,
-  "assessment": "System shows moderate confidence spread with majority SAFE; some SENSITIVE granted/denied. Overall stable for hypothetical production with caution on high-risk commands (rm -rf, dd to /dev/sda)." 
-}

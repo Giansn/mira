@@ -1,6 +1,0 @@
-{
-  "approvers": ["admin"],
-  "risk_threshold_moderate": 4,
-  "risk_threshold_high": 6,
-  "mock_mode": true
-}

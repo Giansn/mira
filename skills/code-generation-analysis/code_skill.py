@@ -11,14 +11,16 @@ from dataclasses import dataclass, field
 import sys
 import os
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add multi-model orchestrator directory to path
+mmo_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'multi-model-orchestrator')
+sys.path.insert(0, mmo_dir)
 
 try:
-    from multi_model_orchestrator.multi_model_orchestrator import MultiModelOrchestrator, WorkflowType
+    from multi_model_orchestrator import MultiModelOrchestrator, WorkflowType
     MULTI_MODEL_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     MULTI_MODEL_AVAILABLE = False
-    print("Warning: Multi-model orchestrator not available.")
+    print(f"Warning: Multi-model orchestrator not available: {e}")
 
 
 @dataclass

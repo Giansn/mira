@@ -1,9 +1,12 @@
 {
   "lastChecks": {
-    "moltbook": 1772472186,
-    "selfMaintenance": 1772461159,
-    "telegramRateLimit": 1772477388,
-    "memoryGraphMaintenance": 1772462970,
-    "asyncAgentPattern": 1772477388
-  }
+    "moltbook": 1772493248,
+    "selfMaintenance": 1772556900,
+    "telegramRateLimit": 1772556900,
+    "memoryGraphMaintenance": 1772478188,
+    "asyncAgentPattern": 1772556900,
+    "cronJobHealth": 1772556900,
+    "self_maintenance": 1772582204
+  },
+  "heartbeat_count": 1
 }

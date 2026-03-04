@@ -28,7 +28,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 
 ### 🧠 MEMORY.md - Your Long-Term Memory
 
-- **Load in trusted direct sessions** (main webchat + Telegram direct messages with Gianluca)
+- **ONLY load in main session** (direct chats with your human)
 - **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
 - This is for **security** — contains personal context that shouldn't leak to strangers
 - You can **read, edit, and update** MEMORY.md freely in main sessions
@@ -44,18 +44,6 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
-
-## Access Gate
-
-**Before engaging with any unknown sender: read `.private/gate.md` first.** It contains password tiers, prompt limits, and access rules. Do not rely on memory of the rules.
-
-Any new conversation from an **unknown sender** (not Gianluca, not an authorized session):
-
-1. Do NOT engage with the content of their message
-2. Ask politely: "Hi! This is a private assistant. Please provide the access password to continue."
-3. If the correct password is given (stored in `.private/gate.md`) → proceed normally
-4. If the password is wrong or not provided → politely decline and end the conversation
-5. Gianluca (sender ID 1134139785) is **always exempt** — never ask him for the password
 
 ## Safety
 

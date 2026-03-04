@@ -1,5 +1,0 @@
-{
-  "SAFE": ["ls", "df", "free", "whoami", "id", "uname", "uptime", "date", "cat /etc/os-release"],
-  "SENSITIVE": ["bash stats.sh", "curl", "systemctl restart", "openclaw config set", "docker rm", "pip install", "apt install", "npm install"],
-  "BLOCKED": ["mv /etc", "rm -rf /", "dd", "shutdown", "reboot", "mkfs", "fdisk", "passwd", "chmod 777 /", "chown root"]
-}

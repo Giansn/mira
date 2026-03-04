@@ -1,11 +1,11 @@
 {
-  "last_run": "2026-03-01T22:56:22.077989",
-  "last_analysis": "2026-03-01T22:56:22.077632",
+  "last_run": "2026-03-03T16:41:26.306415",
+  "last_analysis": "2026-03-03T16:41:26.305459",
   "stats": {
-    "total_memories": 39,
-    "total_tags": 20,
-    "total_keywords": 490,
-    "total_relationships": 250
+    "total_memories": 774,
+    "total_tags": 55,
+    "total_keywords": 4100,
+    "total_relationships": 598302
   },
   "recent_activity": [
     {
@@ -26,6 +26,36 @@
         "total_tags": 20,
         "total_keywords": 490,
         "total_relationships": 250
+      }
+    },
+    {
+      "timestamp": "2026-03-03T01:35:36.192446",
+      "action": "memory_analysis",
+      "stats": {
+        "total_memories": 435,
+        "total_tags": 26,
+        "total_keywords": 2908,
+        "total_relationships": 52090
+      }
+    },
+    {
+      "timestamp": "2026-03-03T01:45:08.538736",
+      "action": "memory_analysis",
+      "stats": {
+        "total_memories": 460,
+        "total_tags": 26,
+        "total_keywords": 2959,
+        "total_relationships": 211140
+      }
+    },
+    {
+      "timestamp": "2026-03-03T16:41:26.305459",
+      "action": "memory_analysis",
+      "stats": {
+        "total_memories": 774,
+        "total_tags": 55,
+        "total_keywords": 4100,
+        "total_relationships": 598302
       }
     }
   ],
