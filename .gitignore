@@ -103,6 +103,7 @@ session-manager/session-map.json
 /update_*.py
 /generate_*.py
 /post_*.py
+/post_*.sh
 /cross_post_*.py
 /final_*.py
 /memory_tagger_*.py
