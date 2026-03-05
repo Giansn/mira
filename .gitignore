@@ -123,3 +123,7 @@ session-manager/session-map.json
 
 # Test and simulation data (generated)
 /simulations/hot_workspace/branches/*.json
+
+# Generated embeddings (can be regenerated)
+/memory/embeddings/*.npy
+/memory/embeddings/backups/
