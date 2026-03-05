@@ -85,6 +85,9 @@ session-manager/session-map.json
 # Debug and test scripts (temporary development files)
 /debug_*.py
 /test_*.py
+/test_*.sh
+/test_*.json
+/test_*.html
 /check_*.py
 /delete_*.py
 /extract_*.py
@@ -96,8 +99,17 @@ session-manager/session-map.json
 /identify_*.py
 /show_*.py
 /tag_*.py
+/tag_*.json
 /update_*.py
 /generate_*.py
+/post_*.py
+/cross_post_*.py
+/final_*.py
+/memory_tagger_*.py
+/quick_test.sh
+/emergency_repair.sh
+/start_langgraph_*.sh
+/final_*.sh
 
 # Backup files
 *.backup*
@@ -112,6 +124,8 @@ session-manager/session-map.json
 /*_report.md
 /*_post.md
 /*_version.md
+/*_POST.md
+/*_VERSION.md
 
 # Large binary files (PDFs, documents) - keep out of repo
 /*.pdf
