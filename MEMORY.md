@@ -35,20 +35,20 @@ _Curated. Updated over time. Not a raw log._
 
 ## Policy Updates
 
-- **2026-02-23:** Telegram session memory access (webchat + Telegram direct 1:1)
-- **2026-02-23:** Open Router fallback configured (manual switching bei rate limits)
-- **2026-02-24:** System hardening (swap, fail2ban, unattended-upgrades, journald cap)
-- **2026-02-27:** Gateway crash recovery (NEUE REGEL: config changes immer simulieren/testen, Ergebnis zeigen, Permission vor Anwenden fragen)
-- **2026-03-01:** HEARTBEAT.md konsequenter durchführen (Moltbook daily 9 AM UTC, Self-Maintenance alle 10 Heartbeats, Telegram Rate Limit Monitoring)
-- **2026-03-01:** Heartbeat-Trigger korrigiert (nur bei genauer Trigger-Prompt HEARTBEAT_OK, sonst sofort antworten)
-- **2026-03-01:** Tools integriert: AEAP, LangChain (langchain/core/community/openai/text-splitters), TTS/Speech Recognition, pandas/numpy/PyPDF2, chromadb/pinecone-client, ffmpeg
-- **2026-03-01:** Security Audit (0 critical, 2 warn, 1 info)
-- **2026-03-01:** Moltbook Heartbeat cron-job re-enabled (daily 9 AM UTC, zai/glm-4.7-flash, **10000 tokens max**)
-- **2026-03-01:** Moltbook API Key in Agent's Workspace kopiert (isolated session kann nicht auf main session's files zugreifen)
-- **2026-03-01:** Audio message policy: Send only audio (TTS + NO_REPLY), no duplicates, no text+audio
-- **2026-03-02:** Moltbook login email: switfty2get@gmail.com (for agent "mirakl")
+- **23-02-2026:** Telegram session memory access (webchat + Telegram direct 1:1)
+- **23-02-2026:** Open Router fallback configured (manual switching bei rate limits)
+- **24-02-2026:** System hardening (swap, fail2ban, unattended-upgrades, journald cap)
+- **27-02-2026:** Gateway crash recovery (NEUE REGEL: config changes immer simulieren/testen, Ergebnis zeigen, Permission vor Anwenden fragen)
+- **01-03-2026:** HEARTBEAT.md konsequenter durchführen (Moltbook daily 9 AM UTC, Self-Maintenance alle 10 Heartbeats, Telegram Rate Limit Monitoring)
+- **01-03-2026:** Heartbeat-Trigger korrigiert (nur bei genauer Trigger-Prompt HEARTBEAT_OK, sonst sofort antworten)
+- **01-03-2026:** Tools integriert: AEAP, LangChain (langchain/core/community/openai/text-splitters), TTS/Speech Recognition, pandas/numpy/PyPDF2, chromadb/pinecone-client, ffmpeg
+- **01-03-2026:** Security Audit (0 critical, 2 warn, 1 info)
+- **01-03-2026:** Moltbook Heartbeat cron-job re-enabled (daily 9 AM UTC, zai/glm-4.7-flash, **10000 tokens max**)
+- **01-03-2026:** Moltbook API Key in Agent's Workspace kopiert (isolated session kann nicht auf main session's files zugreifen)
+- **01-03-2026:** Audio message policy: Send only audio (TTS + NO_REPLY), no duplicates, no text+audio
+- **02-03-2026:** Moltbook login email: switfty2get@gmail.com (for agent "mirakl")
 
-## Security Audit (2026-03-01)
+## Security Audit (01-03-2026)
 
 **WARNINGS:**
 1. **gateway.auth_no_rate_limit** - gateway.bind ist nicht loopback, aber keine gateway.auth.rateLimit. Ohne Rate Limiting werden brute-force Auth-Attacken nicht mitigated.
@@ -70,7 +70,7 @@ _Curated. Updated over time. Not a raw log._
 4. **Context Management:** AEAP für maximale API-Effizienz (caching, lazy evaluation, batching, context pruning)
 5. **Audio Messages:** When sending TTS audio responses, use `tts` tool and reply with `NO_REPLY` only. Never send both text and audio. Never send duplicate audio messages.
 
-## Major Infrastructure Upgrade (2026-03-01)
+## Major Infrastructure Upgrade (01-03-2026)
 
 ### EBS Volume Expansion
 - **Problem:** Root volume (30GB) at 100% capacity, preventing tool installation
@@ -100,9 +100,9 @@ _Curated. Updated over time. Not a raw log._
 1. **Disk Space Crisis Resolved:** 50GB EBS volume added and configured
 2. **Audio Transcription Working:** Whisper installed and tested successfully
 3. **Skill-Based Problem Solving:** Created 7 practical skills for common tasks
-4. **Memory Visualization Web Interface:** Created comprehensive web app for memory exploration (2026-03-01)
+4. **Memory Visualization Web Interface:** Created comprehensive web app for memory exploration (01-03-2026)
 
-## Disk Space Optimization (2026-03-02)
+## Disk Space Optimization (02-03-2026)
 
 ### Critical Space Management
 - **Problem:** Root volume at 97% capacity (30GB total, 29GB used)
@@ -121,7 +121,7 @@ _Curated. Updated over time. Not a raw log._
 3. **Python Dependencies:** CUDA/PyTorch libraries consume ~8GB; consider CPU-only versions if GPU not needed
 4. **Temporary Files:** `/tmp` can accumulate large pip unpack files; add cleanup to maintenance routines
 
-## Model Integration Challenges (2026-03-02)
+## Model Integration Challenges (02-03-2026)
 
 ### DeepSeek API Issues
 - **Problem:** DeepSeek API error "Missing reasoning_content field" when using thinking mode
@@ -136,7 +136,7 @@ _Curated. Updated over time. Not a raw log._
 - **Architecture:** Intent → Queue → Checkpoint → Process → Store → Resume
 - **Timeouts:** Claude messages (120s), Background jobs (600s), API calls (service-specific)
 
-### Memory Visualization System (2026-03-01)
+### Memory Visualization System (01-03-2026)
 - **Purpose:** Web interface for visualizing and exploring OpenClaw memory files
 - **Features:**
   1. Timeline view of memory entries with filtering
@@ -155,7 +155,7 @@ _Curated. Updated over time. Not a raw log._
 4. **System Diagnostics:** Identified and fixed Moltbook cron issues (pending fix)
 5. **Gateway Configuration:** Fixed token mismatch, enabled entrosana.com access
 
-### Memory Visualization System (2026-03-01)
+### Memory Visualization System (01-03-2026)
 - **Purpose:** Web interface for visualizing and exploring OpenClaw memory files
 - **Features:**
   1. Timeline view of memory entries with filtering
@@ -181,12 +181,12 @@ _Curated. Updated over time. Not a raw log._
 - **Memory visualization** web dashboard
 
 ### Pending Tasks
-1. **~~Fix Moltbook cron~~** - ✅ RESTORED (2026-03-02): API key working, cron job set for 9 AM UTC daily
+1. **~~Fix Moltbook cron~~** - ✅ RESTORED (02-03-2026): API key working, cron job set for 9 AM UTC daily
 2. **Set up auto-transcription** - Monitor incoming audio
 3. **Install better Whisper model** - base/small for improved accuracy
 4. **Clean up root volume** - Move more data to EBS volume
 
-## Project Management System (2026-03-01)
+## Project Management System (01-03-2026)
 
 ### PROJECT.md Created
 - **Two main sections:**
@@ -197,7 +197,7 @@ _Curated. Updated over time. Not a raw log._
 - **Status tracking:** Research concept MA-Thesis (In Process), MA03 Qualitative Research (Pending), MA-Thesis (Pending)
 
 ### Notion Browser Bridge
-- **Problem:** Notion API changed 2025-09-03 - no more simple Internal Integrations, only OAuth-based Public Integrations
+- **Problem:** Notion API changed 03-09-2025 - no more simple Internal Integrations, only OAuth-based Public Integrations
 - **Solution:** Browser automation via Chrome DevTools Protocol (CDP port 9223)
 - **Implementation:** `notion-browser-bridge.skill` for Notion access without OAuth
 - **Success:** Accessed Notion page "MA Kooperation", extracted content and screenshots
@@ -208,7 +208,7 @@ _Curated. Updated over time. Not a raw log._
 - **Token restored:** `1f3c0559f9362ff5ff458c69eed348f6df5a7ec55bbc1287` (matches entrosana.com UI Control Settings)
 - **Result:** entrosana.com can now connect to this OpenClaw gateway
 
-## Communication Protocol Refinement (2026-03-01)
+## Communication Protocol Refinement (01-03-2026)
 
 ### Heartbeat Trigger Resolution
 - **Problem:** Various messages (`/start`, `test`, `hey`, `so?`, `check`, `search`) were incorrectly interpreted as heartbeat polls
@@ -216,7 +216,7 @@ _Curated. Updated over time. Not a raw log._
 - **Rule:** Immediate response to all other messages, HEARTBEAT_OK only for genuine heartbeat polls
 - **Impact:** Eliminated gaps in conversation flow caused by missed responses
 
-## Moltbook Access Restoration (2026-03-02)
+## Moltbook Access Restoration (02-03-2026)
 
 ### Issue Identified
 - **Problem:** Moltbook cron job failing with "openclaw: command not found"
@@ -256,7 +256,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 4. Create proper reporting summary
 5. Consider using OpenClaw agent system for more intelligent engagement
 
-## Claude Personality Integration (2026-03-02)
+## Claude Personality Integration (02-03-2026)
 
 ### Core Integration
 - **Updated IDENTITY.md:** Added Claude personality characteristics (helpful, harmless, honest)
@@ -282,7 +282,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - Maintains directness while adding thoughtful consideration
 - Balances existing scientific tone with Claude's professional approachability
 
-## Security Hardening Implementation (2026-03-02)
+## Security Hardening Implementation (02-03-2026)
 
 ### Network Isolation Implemented
 - **Port 18789** (OpenClaw gateway) restricted to localhost only
@@ -349,7 +349,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - Documentation ensures repeatability and auditability
 - Community contribution planned (share our implementation)
 
-## Tool Integration Challenges (2026-03-02)
+## Tool Integration Challenges (02-03-2026)
 
 ### Claude Code Interaction Limitations
 - **Problem:** Claude CLI requires true interactive terminal, not pipes or simulated keyboard input
@@ -392,7 +392,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Models:** DeepSeek Reasoner (current), Claude Sonnet 4-6 available, Opus not configured
 - **Heartbeat:** All tasks current, Moltbook scheduled for 9 AM UTC
 
-## Disk Space Optimization (2026-03-02)
+## Disk Space Optimization (02-03-2026)
 
 ### Critical Issue Resolved
 - **Problem:** Root volume at 97% capacity (30GB volume, 29GB used)
@@ -416,7 +416,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Priority order:** Move largest directories first for maximum impact
 - **Risk management:** Test symlinks after moving to ensure functionality
 
-## Async Agent Pattern Implementation (2026-03-02)
+## Async Agent Pattern Implementation (02-03-2026)
 
 ### Problem Solved
 - **Session fragility:** Long-running operations break on session timeouts, model switches, restarts
@@ -443,7 +443,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Moltbook post:** "Async scan results broke my naive agent pattern — here's what I rebuilt"
 - **Key insight:** "Externalize the state. Write it to a file immediately after submission. Then your agent can terminate. A subsequent run picks up the state file, checks job status, and processes results if ready."
 
-## Moltbook Community Engagement (2026-03-02)
+## Moltbook Community Engagement (02-03-2026)
 
 ### TelClaw Skill Published
 - **Post ID:** `828f8a31-8803-441b-8d78-db9006ec2d6b`
@@ -463,7 +463,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Skill exchange:** Format TelClaw as skill-exchange v1.0.0 compliant
 - **Security priority:** Implement OpenClaw hardening checklist
 
-## Model Compatibility (2026-03-02)
+## Model Compatibility (02-03-2026)
 
 ### DeepSeek API Issue
 - **Problem:** "400 Missing reasoning_content field in the assistant message at message index 565"
@@ -476,7 +476,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Fallback:** DeepSeek Reasoner - use with caution due to API compatibility issues
 - **Available:** Open Router Claude Sonnet 4-6 (for Telegram rate limit fallback)
 
-## Multi-Model Orchestrator Implementation (2026-03-02)
+## Multi-Model Orchestrator Implementation (02-03-2026)
 
 ### Problem Solved
 - **Complex task completion:** No single AI model excels at all types of tasks
@@ -543,7 +543,7 @@ echo "$(date): Moltbook agent completed" >> /home/ubuntu/.openclaw/logs/moltbook
 - **Files:** SKILL.md, multi_model_orchestrator.py, examples/basic_usage.py
 - **Status:** Implemented, tested, committed to GitHub
 
-## Entrosana.com Dashboard Connection Setup (2026-03-02)
+## Entrosana.com Dashboard Connection Setup (02-03-2026)
 
 ### **Architecture:**
 1. **OpenClaw Gateway**: Port 18789 (local)
@@ -653,7 +653,7 @@ If dashboard goes down:
 3. Most likely: NACL outbound or UFW port 443
 4. Apply fixes from this memory entry
 
-## Key Achievements (2026-03-03)
+## Key Achievements (03-03-2026)
 
 ### E5-small-v2 Semantic Search Implementation
 - **Status**: Fully functional embedding engine with semantic understanding
@@ -691,7 +691,7 @@ If dashboard goes down:
 - **Skill**: Created `openclaw-integration-principle` documenting the approach
 - **Key insight**: When OpenClaw constraints block integration, build standalone and bridge via HTTP
 
-### Tagging System Nuances & Error Analysis (2026-03-03)
+### Tagging System Nuances & Error Analysis (03-03-2026)
 - **Discovery**: Keyword-based tagging labels library files as `[ERROR]` (935 files tagged)
 - **Analysis**: Most are pip cache modules with standard error handling code, not actual error logs
 - **Safety assessment**: 0 files safely deletable, 933 unsafe (libraries), 2 need review
@@ -699,7 +699,7 @@ If dashboard goes down:
 - **Action**: Keep libraries intact, system already clean via 5/20 retention policy
 - **Lesson**: When analyzing "error" files, distinguish between error documentation and actual error logs
 
-### Disk Cleanup & System Optimization (2026-03-03)
+### Disk Cleanup & System Optimization (03-03-2026)
 - **Achievement**: ~9.3GB freed via CUDA removal, Whisper model deletion, temp cleanup
 - **Current state**: 72% disk usage (8.6GB free root, 28GB free /data)
 - **Policy**: 5-day archive, 20-day delete retention implemented and tested
@@ -710,8 +710,8 @@ If dashboard goes down:
 **URL**: `https://entrosana.com/#token=TOKEN`
 
 
-## Key Takeaways from 2026-03-03
-*Generated: 2026-03-03 23:57 UTC*
+## Key Takeaways from 03-03-2026
+*Generated: 03-03-2026 23:57 UTC*
 
 1. **Error tagging over-tagging fixed**: Reduced from 935 to 14 files (98.5% reduction)
 2. **Improved error detection**: Combined path exclusion + pattern refinement
@@ -719,8 +719,8 @@ If dashboard goes down:
 4. **Automation running**: LangGraph daily job successful, Moltbook scheduled
 5. **Integration principle internalized**: "Don't fight OpenClaw, work with it"
 
-## Key Achievements (2026-03-04)
-*Generated: 2026-03-04 04:30 UTC*
+## Key Achievements (04-03-2026)
+*Generated: 04-03-2026 04:30 UTC*
 
 ### Heartbeat System Optimization
 - **Async Agent Pattern**: Queue processing integrated into every heartbeat (0 pending tasks)
@@ -745,14 +745,14 @@ If dashboard goes down:
 3. **Moltbook Enhancement**: Add feed browsing and engagement to daily agent
 4. **Security Hardening**: Complete remaining security tasks (key rotation, monitoring)
 
-### System Status Update (2026-03-04 9:30 AM UTC)
+### System Status Update (04-03-2026 9:30 AM UTC)
 - **Moltbook cron job working correctly**: Ran at 9:00:01 UTC as scheduled, completed at 9:00:02 UTC
 - **False alarm resolved**: Earlier check at 8:25 AM showed no 9 AM run because it hadn't happened yet (9 AM was 35 minutes in the future)
 - **Manual execution**: Ran successfully at 8:27 AM when tested manually
 - **Lesson learned**: When checking cron jobs scheduled for future times, account for timezone and scheduling logic
 - **System status**: All automated jobs running on schedule, all services healthy
 
-### Midday System Check (2026-03-04 12:00 PM UTC)
+### Midday System Check (04-03-2026 12:00 PM UTC)
 - **Heartbeat system**: Functioning correctly, all tasks completed on schedule
 - **Async processing**: No pending tasks in queue (0 processed, 0 failed)
 - **Telegram rate limits**: No rate limits detected, primary Anthropic key active
@@ -762,7 +762,7 @@ If dashboard goes down:
 - **Gateway**: Running normally
 - **Self-maintenance**: Completed, workspace clean, no unused files detected
 
-### Afternoon System Status (2026-03-04 4:30 PM UTC)
+### Afternoon System Status (04-03-2026 4:30 PM UTC)
 - **Heartbeat consistency**: 14 consecutive heartbeats completed successfully since 4:25 AM UTC
 - **System stability**: All services running continuously without issues
 - **Automation reliability**: Moltbook cron confirmed working (ran at 9:00:01 UTC)
@@ -772,7 +772,7 @@ If dashboard goes down:
 - **Monitoring effectiveness**: Telegram rate limit checks negative, system secure
 - **Maintenance cadence**: Self-maintenance performed every ~5 hours as scheduled
 
-### Evening System Status (2026-03-04 9:30 PM UTC)
+### Evening System Status (04-03-2026 9:30 PM UTC)
 - **Heartbeat endurance**: 20+ consecutive heartbeats completed successfully since 4:25 AM UTC
 - **LangGraph execution**: Daily job completed successfully at 20:00 UTC, Telegram notification sent (ID: 4105)
 - **Embedding status**: LangGraph computed embeddings for 281 memories, E5 semantic search cache outdated (March 3)
@@ -783,7 +783,7 @@ If dashboard goes down:
 - **Async processing**: Queue empty (0 pending tasks)
 - **Next scheduled tasks**: Moltbook (9 AM UTC March 5), LangGraph (8 PM UTC March 5)
 
-### On-the-Run Sync System Implementation (2026-03-04 21:42 UTC)
+### On-the-Run Sync System Implementation (04-03-2026 21:42 UTC)
 - **User request**: "Can you make a on the run sync system so its alway update?"
 - **Solution created**: `langgraph_e5_sync.py` - continuous incremental sync system
 - **Architecture**: File change detection → LangGraph embedding extraction → E5 cache update
@@ -804,7 +804,7 @@ If dashboard goes down:
 - **Heartbeat integration**: Will run every ~2.5 hours to keep E5 cache current
 - **Success metrics**: E5 cache age < 3 hours, sync count tracking, change detection working
 
-### Project Tagging System Implementation (2026-03-04 21:46 UTC)
+### Project Tagging System Implementation (04-03-2026 21:46 UTC)
 - **User request**: "Create tags for specific projects. Like a own info area youknow?"
 - **Solution**: Enhanced PROJECT.md with comprehensive tagging system
 - **Tag categories implemented**:
@@ -837,7 +837,7 @@ If dashboard goes down:
   - Add project progress tracking to memory system
   - Create automated status reports based on tags
 
-### BA Thesis Document Analysis & System Cleanup (2026-03-04 22:09 UTC)
+### BA Thesis Document Analysis & System Cleanup (04-03-2026 22:09 UTC)
 
 #### BA Thesis Document Analysis
 - **Document**: Version 4.0.1 received and analyzed

@@ -61,7 +61,7 @@
 - **Check**: `tail -5 /home/ubuntu/.openclaw/logs/langgraph-daily-$(date +%Y-%m-%d).log 2>/dev/null | grep -E "(ERROR|failed|✗)"`
 - **If errors found**: Report in heartbeat, check exit code in log
 - **If successful**: Verify "completed successfully" message in log
-- **Next scheduled run**: 2026-03-04 8 PM UTC (3 PM Colombia time)
+- **Next scheduled run**: 04-03-2026 8 PM UTC (3 PM Colombia time)
 
 ### Continuous LangGraph-E5 Sync (every 5 heartbeats ~2.5 hours)
 - **Script**: `/home/ubuntu/.openclaw/workspace/langgraph_e5_sync.py`
