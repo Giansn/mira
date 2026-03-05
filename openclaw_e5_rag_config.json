@@ -1,0 +1,43 @@
+{
+  "memorySearch": {
+    "provider": "http",
+    "endpoint": "http://localhost:8000/search",
+    "timeout": 10000,
+    "retries": 2,
+    "fallback": {
+      "provider": "local",
+      "model": "hf:ChristianAzinn/e5-small-v2-gguf/e5-small-v2.Q4_K_M.gguf"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "parameters": {
+      "top_k": 5,
+      "min_score": 0.3
+    }
+  },
+  "e5RagService": {
+    "enabled": true,
+    "autoStart": true,
+    "host": "localhost",
+    "port": 8000,
+    "healthCheck": "/status",
+    "embeddingModel": "intfloat/e5-small-v2",
+    "chunkSize": 256,
+    "chunkOverlap": 64,
+    "embeddingDimension": 384,
+    "memorySources": [
+      "MEMORY.md",
+      "memory/*.md"
+    ],
+    "embeddingCache": "memory/embeddings/",
+    "updateSchedule": "every 5 heartbeats"
+  },
+  "langGraphIntegration": {
+    "enabled": false,
+    "planned": true,
+    "useCase": "memory relationship analysis",
+    "timeline": "next week",
+    "dependencies": ["langgraph"]
+  }
+}
