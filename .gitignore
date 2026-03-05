@@ -126,4 +126,6 @@ session-manager/session-map.json
 
 # Generated embeddings (can be regenerated)
 /memory/embeddings/*.npy
+/memory/embeddings/memory_embeddings.json
 /memory/embeddings/backups/
+/memory/embeddings/*.backup*
