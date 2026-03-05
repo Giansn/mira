@@ -58,7 +58,7 @@
   - Log all state changes for debugging
 - **State file**: `/home/ubuntu/.openclaw/workspace/memory/telegram_state.json`
 - **Log file**: `/home/ubuntu/.openclaw/logs/telegram-monitor.log`
-- **Current status**: NORMAL (anthropic/claude-sonnet-4-6 active) - 05-03-2026 00:38 UTC
+- **Current status**: NORMAL (anthropic/claude-sonnet-4-6 active) - 05-03-2026 18:43 UTC
 - **Fallback provider**: `openrouter/anthropic-claude-sonnet-4-6`
 - **Integration**: Updates HEARTBEAT.md status automatically
 
@@ -72,7 +72,7 @@
 
 ### Continuous LangGraph-E5 Sync (every 5 heartbeats ~2.5 hours)
 - **Script**: `/home/ubuntu/.openclaw/workspace/langgraph_e5_sync.py`
-- **Command**: `python3 /home/ubuntu/.openclaw/workspace/langgraph_e5_sync.py --sync --timeout 30`
+- **Command**: `cd /home/ubuntu/.openclaw/workspace && ./langgraph_e5_sync.py --sync`
 - **Tasks**:
   - Check for changed memory files since last sync
   - If changes detected AND LangGraph available, sync embeddings to E5 cache
