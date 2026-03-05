@@ -9,6 +9,7 @@ Enhanced LangGraph memory system with:
 import os
 import re
 import json
+import glob
 from datetime import datetime, timedelta
 from typing import TypedDict, List, Dict, Any, Optional, Set
 from dataclasses import dataclass, field
@@ -221,6 +222,43 @@ class EnhancedMemoryGraph:
         
         return list(tags)
     
+    def _is_meaningful_chunk(self, chunk_text: str) -> bool:
+        """
+        Check if a chunk contains meaningful content (not empty, not just headers).
+        
+        Args:
+            chunk_text: The chunk text to evaluate
+            
+        Returns:
+            True if the chunk is meaningful for embedding and search
+        """
+        # Check 1: Not empty or whitespace-only
+        if not chunk_text or not chunk_text.strip():
+            return False
+        
+        text = chunk_text.strip()
+        
+        # Check 2: Minimum length (adjustable)
+        if len(text) < 40:  # Slightly higher than 30 to filter short headers
+            # Check if it's just a header (starts with # and has few words)
+            lines = text.split('\n')
+            if len(lines) == 1 and text.startswith('#'):
+                # Single line that's a header - likely not meaningful alone
+                return False
+        
+        # Check 3: Has actual content (not just metadata, frontmatter, etc.)
+        # Count words (rough estimate)
+        words = text.split()
+        if len(words) < 10:  # Very short content
+            # Might be a header or brief note
+            return False
+        
+        # Check 4: Not just code blocks or special markers
+        if text.startswith('```') or '---' in text[:20]:
+            return False
+        
+        return True
+    
     def _compute_embedding(self, text: str) -> Optional[List[float]]:
         """Compute semantic embedding for text."""
         if not self.semantic_model:
@@ -254,26 +292,65 @@ class EnhancedMemoryGraph:
     
     def _load_and_enhance_memories(self):
         """Load and enhance existing memories."""
-        # Load from MEMORY.md
+        processed_files = set()
+        
+        # 1. Load from MEMORY.md (long-term curated memory)
         if os.path.exists(self.memory_file):
             self._parse_and_enhance_file(self.memory_file, "MEMORY.md")
+            processed_files.add(self.memory_file)
         
-        # Load from daily memory files
+        # 2. Load from daily memory files (session logs)
         if os.path.exists(self.memory_dir):
             for filename in os.listdir(self.memory_dir):
                 if filename.endswith(".md"):
                     filepath = os.path.join(self.memory_dir, filename)
-                    self._parse_and_enhance_file(filepath, f"memory/{filename}")
+                    if filepath not in processed_files:
+                        self._parse_and_enhance_file(filepath, f"memory/{filename}")
+                        processed_files.add(filepath)
+        
+        # 3. Load configuration files (personality, protocols, tools)
+        config_files = [
+            "SOUL.md", "AGENTS.md", "TOOLS.md", "IDENTITY.md",
+            "HEARTBEAT.md", "USER.md", "PROJECT.md"
+        ]
+        for config_file in config_files:
+            filepath = os.path.join(self.workspace_path, config_file)
+            if os.path.exists(filepath) and filepath not in processed_files:
+                self._parse_and_enhance_file(filepath, config_file)
+                processed_files.add(filepath)
+        
+        # 4. Load thesis chapters and writing
+        thesis_patterns = [
+            "ba_thesis_chapter*.md",
+            "writing/*.md"
+        ]
+        for pattern in thesis_patterns:
+            for filepath in glob.glob(os.path.join(self.workspace_path, pattern)):
+                if filepath not in processed_files:
+                    # Use relative path for source name
+                    rel_path = os.path.relpath(filepath, self.workspace_path)
+                    self._parse_and_enhance_file(filepath, rel_path)
+                    processed_files.add(filepath)
+        
+        # 5. Load skills documentation (SKILL.md files)
+        skill_pattern = os.path.join(self.workspace_path, "skills", "*", "SKILL.md")
+        for filepath in glob.glob(skill_pattern):
+            if filepath not in processed_files:
+                # Extract skill name from path
+                skill_dir = os.path.basename(os.path.dirname(filepath))
+                source_name = f"skills/{skill_dir}/SKILL.md"
+                self._parse_and_enhance_file(filepath, source_name)
+                processed_files.add(filepath)
         
         # Compute embeddings and relationships
         self._compute_embeddings()
         self._compute_relationships()
     
     def _parse_and_enhance_file(self, filepath: str, source: str):
-        """Parse a file and create enhanced memory chunks."""
+        """Parse a file and create enhanced memory chunks using line-based chunking."""
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
-                content = f.read()
+                lines = f.readlines()
             
             # Extract date from filename
             if source.startswith("memory/"):
@@ -285,46 +362,118 @@ class EnhancedMemoryGraph:
             else:
                 timestamp = datetime.now()
             
-            # Split by sections
-            sections = re.split(r'\n##+\s+', content)
+            # State for chunking
+            current_chunk_lines = []
+            current_start = 1
+            in_code_block = False
+            in_frontmatter = False
+            frontmatter_delimiter_count = 0
+            chunk_index = 0
             
-            for i, section in enumerate(sections):
-                if not section.strip():
+            for i, line in enumerate(lines, 1):
+                # Handle frontmatter (lines between ---)
+                stripped_line = line.strip()
+                if stripped_line == "---":
+                    frontmatter_delimiter_count += 1
+                    if frontmatter_delimiter_count == 1:
+                        in_frontmatter = True
+                        continue
+                    elif frontmatter_delimiter_count == 2:
+                        in_frontmatter = False
+                        continue
+                
+                if in_frontmatter:
                     continue
                 
-                # Extract header
-                lines = section.strip().split('\n')
-                header = lines[0] if lines else "Untitled"
+                # Skip code blocks
+                if stripped_line.startswith("```"):
+                    in_code_block = not in_code_block
+                    continue
                 
-                # Create enhanced memory chunk
-                chunk_id = f"{source.replace('/', '_')}_{i}"
+                if in_code_block:
+                    continue
                 
-                # Extract tags and keywords
-                tags = self._extract_tags_from_content(section)
-                keywords = self._extract_keywords(section)
+                # Determine if this line starts a new section (## or ###)
+                is_section_header = stripped_line.startswith("##")
+                # Also consider single # headers but only if they're at the beginning of a line
+                # and not inside lists or other contexts
+                is_top_header = stripped_line.startswith("# ") and not stripped_line.startswith("##")
                 
-                memory = EnhancedMemoryChunk(
-                    id=chunk_id,
-                    content=section.strip(),
-                    source_file=source,
-                    line_range=(0, len(lines)),
-                    timestamp=timestamp,
-                    tags=tags,
-                    keywords=keywords,
-                    embedding=None,
-                    relationships={}
-                )
+                # Start new chunk on section headers or after 15 lines (adjustable)
+                is_large_chunk = len(current_chunk_lines) >= 15
                 
-                self.memories[chunk_id] = memory
+                if (is_section_header or is_top_header or is_large_chunk) and current_chunk_lines:
+                    # Save current chunk
+                    chunk_text = "".join(current_chunk_lines).strip()
+                    
+                    # Skip empty, very short, or header-only chunks
+                    if self._is_meaningful_chunk(chunk_text):
+                        chunk_id = f"{source.replace('/', '_')}_{chunk_index}"
+                        
+                        # Extract tags and keywords from this chunk
+                        tags = self._extract_tags_from_content(chunk_text)
+                        keywords = self._extract_keywords(chunk_text)
+                        
+                        memory = EnhancedMemoryChunk(
+                            id=chunk_id,
+                            content=chunk_text,
+                            source_file=source,
+                            line_range=(current_start, i-1),
+                            timestamp=timestamp,
+                            tags=tags,
+                            keywords=keywords,
+                            embedding=None,
+                            relationships={}
+                        )
+                        
+                        self.memories[chunk_id] = memory
+                        
+                        # Update indices
+                        for tag in tags:
+                            self.tag_index[tag].add(chunk_id)
+                        for keyword in keywords:
+                            self.keyword_index[keyword].add(chunk_id)
+                        
+                        chunk_index += 1
+                    
+                    # Start new chunk
+                    current_chunk_lines = []
+                    current_start = i
                 
-                # Update indices
-                for tag in tags:
-                    self.tag_index[tag].add(chunk_id)
-                for keyword in keywords:
-                    self.keyword_index[keyword].add(chunk_id)
-                
+                current_chunk_lines.append(line)
+            
+            # Add final chunk
+            if current_chunk_lines:
+                chunk_text = "".join(current_chunk_lines).strip()
+                if self._is_meaningful_chunk(chunk_text):
+                    chunk_id = f"{source.replace('/', '_')}_{chunk_index}"
+                    
+                    tags = self._extract_tags_from_content(chunk_text)
+                    keywords = self._extract_keywords(chunk_text)
+                    
+                    memory = EnhancedMemoryChunk(
+                        id=chunk_id,
+                        content=chunk_text,
+                        source_file=source,
+                        line_range=(current_start, len(lines)),
+                        timestamp=timestamp,
+                        tags=tags,
+                        keywords=keywords,
+                        embedding=None,
+                        relationships={}
+                    )
+                    
+                    self.memories[chunk_id] = memory
+                    
+                    for tag in tags:
+                        self.tag_index[tag].add(chunk_id)
+                    for keyword in keywords:
+                        self.keyword_index[keyword].add(chunk_id)
+        
         except Exception as e:
             print(f"Error parsing {filepath}: {e}")
+            import traceback
+            traceback.print_exc()
     
     def _compute_embeddings(self):
         """Compute embeddings for all memories."""

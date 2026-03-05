@@ -11,12 +11,13 @@ import numpy as np
 from typing import List, Dict, Any, Tuple, Optional
 from datetime import datetime
 import hashlib
+import glob
 from pathlib import Path
 
 # Add virtual environment path
 venv_path = "/home/ubuntu/.openclaw/workspace/.venv-embeddings"
 if os.path.exists(venv_path):
-    site_packages = os.path.join(venv_path, "lib", "python3.12", "site-packages")
+    site_packages = os.path.join(venv_path, "lib", "python3.14", "site-packages")
     if os.path.exists(site_packages):
         sys.path.insert(0, site_packages)
 
@@ -90,25 +91,63 @@ class MemoryStore:
             List of MemoryChunk objects
         """
         chunks = []
+        processed_files = set()
         
-        # Load MEMORY.md
+        # 1. Load MEMORY.md (long-term curated memory)
         memory_file = os.path.join(self.workspace_dir, "MEMORY.md")
-        if os.path.exists(memory_file):
+        if os.path.exists(memory_file) and memory_file not in processed_files:
             chunks.extend(self._chunk_file(memory_file, "MEMORY.md"))
+            processed_files.add(memory_file)
         
-        # Load daily memory files
+        # 2. Load daily memory files (session logs)
         if os.path.exists(self.memory_dir):
             for filename in sorted(os.listdir(self.memory_dir)):
                 if filename.endswith(".md"):
                     filepath = os.path.join(self.memory_dir, filename)
-                    chunks.extend(self._chunk_file(filepath, f"memory/{filename}"))
+                    if filepath not in processed_files:
+                        chunks.extend(self._chunk_file(filepath, f"memory/{filename}"))
+                        processed_files.add(filepath)
+        
+        # 3. Load configuration files (personality, protocols, tools)
+        config_files = [
+            "SOUL.md", "AGENTS.md", "TOOLS.md", "IDENTITY.md",
+            "HEARTBEAT.md", "USER.md", "PROJECT.md"
+        ]
+        for config_file in config_files:
+            filepath = os.path.join(self.workspace_dir, config_file)
+            if os.path.exists(filepath) and filepath not in processed_files:
+                chunks.extend(self._chunk_file(filepath, config_file))
+                processed_files.add(filepath)
+        
+        # 4. Load thesis chapters and writing
+        thesis_patterns = [
+            "ba_thesis_chapter*.md",
+            "writing/*.md"
+        ]
+        for pattern in thesis_patterns:
+            for filepath in glob.glob(os.path.join(self.workspace_dir, pattern)):
+                if filepath not in processed_files:
+                    # Use relative path for source name
+                    rel_path = os.path.relpath(filepath, self.workspace_dir)
+                    chunks.extend(self._chunk_file(filepath, rel_path))
+                    processed_files.add(filepath)
+        
+        # 5. Load skills documentation (SKILL.md files)
+        skill_pattern = os.path.join(self.workspace_dir, "skills", "*", "SKILL.md")
+        for filepath in glob.glob(skill_pattern):
+            if filepath not in processed_files:
+                # Extract skill name from path
+                skill_dir = os.path.basename(os.path.dirname(filepath))
+                source_name = f"skills/{skill_dir}/SKILL.md"
+                chunks.extend(self._chunk_file(filepath, source_name))
+                processed_files.add(filepath)
         
         # Store chunks
         for chunk in chunks:
             self.chunks[chunk.chunk_id] = chunk
             self.chunk_ids.append(chunk.chunk_id)
         
-        print(f"📚 Loaded {len(chunks)} memory chunks from {len(set(c.source for c in chunks))} files")
+        print(f"📚 Loaded {len(chunks)} memory chunks from {len(processed_files)} files")
         return chunks
     
     def _chunk_file(self, filepath: str, source_name: str) -> List[MemoryChunk]:
@@ -149,7 +188,7 @@ class MemoryStore:
                 if (is_section_header or is_large_chunk) and current_chunk:
                     # Save current chunk
                     chunk_text = "".join(current_chunk).strip()
-                    if chunk_text and len(chunk_text) > 20:  # Minimum length
+                    if self._is_meaningful_chunk(chunk_text):
                         chunk = MemoryChunk(
                             text=chunk_text,
                             source=source_name,
@@ -168,7 +207,7 @@ class MemoryStore:
             # Add final chunk
             if current_chunk:
                 chunk_text = "".join(current_chunk).strip()
-                if chunk_text and len(chunk_text) > 20:
+                if self._is_meaningful_chunk(chunk_text):
                     chunk = MemoryChunk(
                         text=chunk_text,
                         source=source_name,
@@ -199,6 +238,40 @@ class MemoryStore:
                 return match.group(1)
         
         return None
+    
+    def _is_meaningful_chunk(self, chunk_text: str) -> bool:
+        """
+        Check if a chunk contains meaningful content.
+        
+        Args:
+            chunk_text: The chunk text to evaluate
+            
+        Returns:
+            True if the chunk is meaningful for embedding and search
+        """
+        # Check 1: Not empty or whitespace-only
+        if not chunk_text or not chunk_text.strip():
+            return False
+        
+        text = chunk_text.strip()
+        
+        # Check 2: Minimum length
+        if len(text) < 40:  # Filter out short headers and brief notes
+            # Check if it's just a header (starts with #)
+            lines = text.split('\n')
+            if len(lines) == 1 and text.startswith('#'):
+                return False
+        
+        # Check 3: Has enough words
+        words = text.split()
+        if len(words) < 10:
+            return False
+        
+        # Check 4: Not just code blocks or special markers
+        if text.startswith('```') or '---' in text[:20]:
+            return False
+        
+        return True
     
     def generate_embeddings(self) -> np.ndarray:
         """

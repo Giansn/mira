@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/home/ubuntu/.openclaw/workspace/.venv-embeddings/bin/python3
 """
 On-the-run LangGraph-E5 Sync System
 Lightweight, incremental sync that runs continuously
@@ -9,6 +9,8 @@ import sys
 import json
 import time
 import hashlib
+import glob
+import multiprocessing
 from datetime import datetime, timedelta
 from pathlib import Path
 import traceback
@@ -79,17 +81,50 @@ class OnTheRunSync:
             return ""
     
     def _check_for_changes(self) -> list:
-        """Check which memory files have changed since last sync."""
+        """Check which tracked files have changed since last sync."""
         changed_files = []
         
-        # Check all .md files in memory directory
-        memory_files = list(Path(self.memory_dir).glob("*.md"))
-        memory_files.append(Path(os.path.join(self.workspace_dir, "MEMORY.md")))
+        # Get all tracked files (same patterns as EnhancedMemoryGraph)
+        tracked_files = []
         
-        for filepath in memory_files:
+        # 1. Memory files
+        tracked_files.extend(list(Path(self.memory_dir).glob("*.md")))
+        tracked_files.append(Path(os.path.join(self.workspace_dir, "MEMORY.md")))
+        
+        # 2. Configuration files
+        config_files = [
+            "SOUL.md", "AGENTS.md", "TOOLS.md", "IDENTITY.md",
+            "HEARTBEAT.md", "USER.md", "PROJECT.md"
+        ]
+        for config_file in config_files:
+            filepath = Path(os.path.join(self.workspace_dir, config_file))
+            if filepath.exists():
+                tracked_files.append(filepath)
+        
+        # 3. Thesis chapters and writing
+        thesis_patterns = [
+            "ba_thesis_chapter*.md",
+            "writing/*.md"
+        ]
+        for pattern in thesis_patterns:
+            tracked_files.extend(Path(self.workspace_dir).glob(pattern))
+        
+        # 4. Skills documentation
+        tracked_files.extend(Path(self.workspace_dir).glob("skills/*/SKILL.md"))
+        
+        # Remove duplicates and non-existent files
+        unique_files = []
+        seen = set()
+        for filepath in tracked_files:
             if not filepath.exists():
                 continue
-            
+            filepath_str = str(filepath)
+            if filepath_str not in seen:
+                seen.add(filepath_str)
+                unique_files.append(filepath)
+        
+        # Check each file for changes
+        for filepath in unique_files:
             filepath_str = str(filepath)
             current_hash = self._file_hash(filepath_str)
             
@@ -122,6 +157,11 @@ class OnTheRunSync:
             
             for memory_id, memory in memory_graph.memories.items():
                 if memory.embedding:  # Only include memories with embeddings
+                    # Skip memories with empty content
+                    if not memory.content.strip():
+                        print(f"   ⚠️  Skipping memory {memory_id} with empty content")
+                        continue
+                    
                     embeddings_data.append({
                         "id": memory_id,
                         "embedding": memory.embedding,
@@ -131,10 +171,12 @@ class OnTheRunSync:
                     
                     metadata.append({
                         "id": memory_id,
-                        "content": memory.content[:200],  # Truncate
+                        "content": memory.content,  # Full content for memory_rag.py
                         "tags": memory.tags,
                         "keywords": memory.keywords,
-                        "source": memory.source_file
+                        "source": memory.source_file,
+                        "line_start": memory.line_range[0] if hasattr(memory, 'line_range') else 1,
+                        "line_end": memory.line_range[1] if hasattr(memory, 'line_range') else 10
                     })
             
             return {
@@ -173,41 +215,69 @@ class OnTheRunSync:
             
             # Convert to numpy array
             embeddings = [item["embedding"] for item in data["embeddings"]]
-            if embeddings:
-                embedding_matrix = np.array(embeddings)
-                npy_path = os.path.join(self.e5_cache_dir, "memory_embeddings.npy")
-                np.save(npy_path, embedding_matrix)
-                print(f"   💾 Saved {len(embeddings)} embeddings to {npy_path}")
+            if not embeddings:
+                print("   ⚠️  No embeddings to save, skipping cache update")
+                return False
             
-            # Save metadata
+            embedding_matrix = np.array(embeddings)
+            npy_path = os.path.join(self.e5_cache_dir, "memory_embeddings.npy")
+            np.save(npy_path, embedding_matrix)
+            print(f"   💾 Saved {len(embeddings)} embeddings to {npy_path}")
+            
+            # Save metadata in memory_rag.py compatible format
+            # Convert metadata to memory_rag.py format: chunk_ids list and chunks dict
+            chunk_ids = []
+            chunks_dict = {}
+            
+            for i, emb_item in enumerate(data["embeddings"]):
+                # Find corresponding metadata
+                meta_item = None
+                for meta in data["metadata"]:
+                    if meta["id"] == emb_item["id"]:
+                        meta_item = meta
+                        break
+                
+                if not meta_item:
+                    print(f"   ⚠️  No metadata found for chunk {emb_item['id']}")
+                    continue
+                
+                chunk_id = emb_item["id"]
+                chunk_ids.append(chunk_id)
+                
+                # Extract line range from metadata if available
+                # metadata from LangGraph might not have line range, use defaults
+                line_start = meta_item.get("line_start", 1)
+                line_end = meta_item.get("line_end", line_start + 10)
+                
+                chunks_dict[chunk_id] = {
+                    "id": chunk_id,
+                    "text": meta_item.get("content", ""),
+                    "source": meta_item.get("source", ""),
+                    "line_start": line_start,
+                    "line_end": line_end,
+                    "timestamp": emb_item.get("timestamp", datetime.now().isoformat()),
+                    "embedding_shape": [len(emb_item["embedding"])]  # Store embedding dimension
+                }
+            
             json_data = {
-                "metadata": {
-                    "sync_timestamp": datetime.now().isoformat(),
-                    "sync_system": "on_the_run_sync",
-                    "total_memories": data["total_memories"],
-                    "embedded_memories": len(data["embeddings"]),
-                    "sync_count": self.sync_count + 1,
-                    "incremental": True
-                },
-                "chunks": data["metadata"],
-                "embeddings_info": [
-                    {"id": item["id"], "source": item["source"]} 
-                    for item in data["embeddings"]
-                ]
+                "chunk_ids": chunk_ids,
+                "chunks": chunks_dict,
+                "timestamp": datetime.now().isoformat(),
+                "embedding_shape": [len(data["embeddings"]), len(data["embeddings"][0]["embedding"])]
             }
             
             json_path = os.path.join(self.e5_cache_dir, "memory_embeddings.json")
             with open(json_path, "w", encoding="utf-8") as f:
                 json.dump(json_data, f, indent=2, ensure_ascii=False)
             
-            print(f"   💾 Saved metadata to {json_path}")
+            print(f"   💾 Saved metadata for {len(chunk_ids)} chunks to {json_path}")
             return True
             
         except Exception as e:
             print(f"   ❌ Failed to save to E5 cache: {e}")
             return False
     
-    def sync_if_needed(self, force: bool = False, fast_mode: bool = False) -> dict:
+    def sync_if_needed(self, force: bool = False, fast_mode: bool = False, timeout_seconds: int = 120) -> dict:
         """
         Perform sync if files have changed.
         

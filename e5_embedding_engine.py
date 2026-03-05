@@ -13,7 +13,7 @@ from datetime import datetime
 # Add virtual environment path
 venv_path = "/home/ubuntu/.openclaw/workspace/.venv-embeddings"
 if os.path.exists(venv_path):
-    site_packages = os.path.join(venv_path, "lib", "python3.12", "site-packages")
+    site_packages = os.path.join(venv_path, "lib", "python3.14", "site-packages")
     if os.path.exists(site_packages):
         sys.path.insert(0, site_packages)
 
