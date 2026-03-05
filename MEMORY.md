@@ -25,7 +25,7 @@ _Curated. Updated over time. Not a raw log._
 - **Model:** anthropic/claude-sonnet-4-6 (direct) - schneller als OpenRouter
 - **Gateway:** Port 18789, entrosana.com access enabled
 - **Session policy:** maxConcurrent: 2 (Main + Telegram), Session-Bereinigung implementiert
-- **Memory:** E5-small-v2 embeddings (296 chunks, memory files only), LangGraph-E5 Sync operational, expansion to config/projects planned
+- **Memory:** E5-small-v2 embeddings (880 chunks, 41 files: config + memory + thesis + skills), LangGraph-E5 Sync operational, content extraction fix applied (Python 3.14 path, format compatibility)
 - **Disk:** Root 73% (8.3G free), /data 44% (27G free)
 
 ### Policy Updates (Relevant)
@@ -58,6 +58,7 @@ _Curated. Updated over time. Not a raw log._
 3. **Memory:** AEAP für API-Effizienz (caching, lazy evaluation, batching, context pruning)
 4. **Integration:** "Don't fight OpenClaw, work with it" → standalone solutions + HTTP bridges
 5. **Session:** Main (Dashboard) + Telegram only, Sub-Agenten temporär mit Labels
+6. **System compatibility:** Always verify Python version paths (3.12 vs 3.14) and JSON format compatibility between subsystems
 
 ### Async Agent Pattern
 - **Problem:** Session-fragile operations break on termination
@@ -106,7 +107,7 @@ _Curated. Updated over time. Not a raw log._
 ### System & Memory
 - **Diagnostics:** OpenClaw system troubleshooting
 - **Service Management:** Cron jobs, background processes, systemd services
-- **E5 Semantic Search:** intfloat/e5-small-v2 embeddings (296 chunks, 384-dim)
+- **E5 Semantic Search:** intfloat/e5-small-v2 embeddings (880 chunks, 384-dim, 41 files), semantic search operational after content extraction fix
 - **LangGraph Integration:** Daily memory organization, relationship computation
 - **Memory Visualization:** Flask web interface (timeline, search, stats dashboard)
 

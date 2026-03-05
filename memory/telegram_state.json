@@ -1,12 +1,12 @@
 {
   "state": "NORMAL",
-  "last_check": "2026-03-05T20:10:02.472416",
+  "last_check": "2026-03-05T21:39:49.407755",
   "rate_limit_detected": false,
   "rate_limit_since": null,
   "fallback_active": false,
   "checks": {
-    "total": 38,
-    "successful": 38,
+    "total": 41,
+    "successful": 41,
     "failed": 0,
     "rate_limit_count": 0
   },
