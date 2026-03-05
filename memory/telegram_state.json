@@ -1,0 +1,15 @@
+{
+  "state": "NORMAL",
+  "last_check": "2026-03-05T00:38:45.351488",
+  "rate_limit_detected": false,
+  "rate_limit_since": null,
+  "fallback_active": false,
+  "checks": {
+    "total": 1,
+    "successful": 1,
+    "failed": 0,
+    "rate_limit_count": 0
+  },
+  "provider": "anthropic/claude-sonnet-4-6",
+  "fallback_provider": "openrouter/anthropic-claude-sonnet-4-6"
+}

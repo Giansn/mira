@@ -46,14 +46,21 @@
 - **Integration:** Externalizes state for session-fragile operations
 - **Expected output:** Operations completed, results stored, state checkpoints updated
 
-### Telegram Rate Limit Monitoring
-- Check recent Telegram session logs (last 30 lines) for "rate limit reached" errors
-- If rate limit detected:
-  1. Log timestamp in /tmp/rate-limit-detected.txt
-  2. Send alert to Telegram: "Switched to Open Router (rate limit detected)"
-  3. Use openrouter/anthropic-claude-sonnet-4-6 for all subsequent Telegram responses
-  4. Continue with Open Router until March 1 (monthly reset)
-- If no rate limit: Clear fallback state, continue using primary Anthropic key
+### Telegram Connectivity & Rate Limit Monitoring (every heartbeat)
+- **Script**: `/home/ubuntu/.openclaw/workspace/simulations/telegram_monitor.py`
+- **Command**: `python3 /home/ubuntu/.openclaw/workspace/simulations/telegram_monitor.py`
+- **Tasks**:
+  - Check system logs for Telegram rate limit errors
+  - Test basic connectivity (gateway health, recent errors)
+  - Update state machine (NORMAL → DEGRADED → RECOVERY → NORMAL)
+  - Automatically switch to fallback provider (Open Router) when issues detected
+  - Attempt recovery after 1 hour in DEGRADED state
+  - Log all state changes for debugging
+- **State file**: `/home/ubuntu/.openclaw/workspace/memory/telegram_state.json`
+- **Log file**: `/home/ubuntu/.openclaw/logs/telegram-monitor.log`
+- **Current status**: NORMAL (anthropic/claude-sonnet-4-6 active) - 05-03-2026 00:38 UTC
+- **Fallback provider**: `openrouter/anthropic-claude-sonnet-4-6`
+- **Integration**: Updates HEARTBEAT.md status automatically
 
 ### Cron Job Health Monitoring (every 3 heartbeats ~1.5 hours)
 - **LangGraph Daily Job**: Check if running successfully
@@ -61,7 +68,7 @@
 - **Check**: `tail -5 /home/ubuntu/.openclaw/logs/langgraph-daily-$(date +%Y-%m-%d).log 2>/dev/null | grep -E "(ERROR|failed|✗)"`
 - **If errors found**: Report in heartbeat, check exit code in log
 - **If successful**: Verify "completed successfully" message in log
-- **Next scheduled run**: 04-03-2026 8 PM UTC (3 PM Colombia time)
+- **Next scheduled run**: 05-03-2026 8 PM UTC (3 PM Colombia time)
 
 ### Continuous LangGraph-E5 Sync (every 5 heartbeats ~2.5 hours)
 - **Script**: `/home/ubuntu/.openclaw/workspace/langgraph_e5_sync.py`
