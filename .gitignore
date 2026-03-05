@@ -81,3 +81,45 @@ simulations/output/
 
 # Session manager data
 session-manager/session-map.json
+
+# Debug and test scripts (temporary development files)
+/debug_*.py
+/test_*.py
+/check_*.py
+/delete_*.py
+/extract_*.py
+/translate_*.py
+/solve_*.py
+/direct_*.py
+/analyze_*.py
+/find_*.py
+/identify_*.py
+/show_*.py
+/tag_*.py
+/update_*.py
+/generate_*.py
+
+# Backup files
+*.backup*
+*backup-*
+*backup.*
+
+# Temporary/one-off outputs
+/full_text.txt
+/tagging_*.json
+/moltbook_*.json
+/*_info.json
+/*_report.md
+/*_post.md
+/*_version.md
+
+# Large binary files (PDFs, documents) - keep out of repo
+/*.pdf
+/*.docx
+/*.doc
+
+# Configuration backups (not needed in repo)
+/heartbeat-state.json.backup*
+
+# Test and simulation data (generated)
+/simulations/hot_workspace/branches/*.json
