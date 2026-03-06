@@ -12,20 +12,23 @@ _Curated. Updated over time. Not a raw log._
 - **Language:** English (mit mir) / German (thesis)
 - **Style:** Compact, scientific, dry wit, no emojis
 
-### BA Thesis (Aktuell: Woche 1 abgeschlossen)
+### BA Thesis (Aktuell: Woche 1 abgeschlossen, Woche 2 in Arbeit)
 - **Title:** "Die internationale Soziale Arbeit im globalen Bildungskontext — Postkoloniale und hegemoniesensitive Analyse internationaler Verschränkungen"
 - **Institution:** FHNW, Hochschule für Soziale Arbeit
 - **Due:** April 2026 (Bern)
-- **Status:** ~45% complete, Woche 1 (NZ empirische Analyse) abgeschlossen, Woche 2 in Arbeit
+- **Status:** ~45% complete, Woche 1 (NZ empirische Analyse) abgeschlossen, Woche 2 (Schweiz-Fallstudie) in Arbeit mit FHNW-Zitierregeln
 - **Progress:** 2,150 Wörter Woche 1 (Ziel: 1,500), drei-Linsen-Analyse (postkolonial, Hegemonie, epistemische Gerechtigkeit)
-- **Tags:** `#ba-thesis` `#active` `#high` `#writing` `#social-work` `#education`
+- **Zitierstandard:** FHNW Wegleitung 2018 (`(vgl. Autor Jahr: Seite).`, en dash für Seitenbereiche, korrekte Bibliographie)
+- **Skills eingesetzt:** paper.write (Zitierkorrektur), ghostwriter (Stilemulation, KI-Deklaration)
+- **Tags:** `#ba-thesis` `#active` `#high` `#writing` `#social-work` `#education` `#fhnw-compliance`
 
 ### System Konfiguration (Aktuell)
 - **Swap:** 2GB swapfile (persistent)
-- **Model:** anthropic/claude-sonnet-4-6 (direct) - schneller als OpenRouter
+- **Model:** deepseek-reasoner (custom-api-deepseek-com/deepseek-reasoner) - aktuell aktiv
 - **Gateway:** Port 18789, entrosana.com access enabled
 - **Session policy:** maxConcurrent: 2 (Main + Telegram), Session-Bereinigung implementiert
-- **Memory:** E5-small-v2 embeddings (880 chunks, 41 files: config + memory + thesis + skills), LangGraph-E5 Sync operational, content extraction fix applied (Python 3.14 path, format compatibility)
+- **Memory:** E5-small-v2 embeddings (880 chunks, 41 files: config + memory + thesis + skills), LangGraph-E5 Sync operational
+- **Skills:** paper.write, ghostwriter, research, multi-model-orchestrator, async-agent-pattern + 20+ weitere
 - **Disk:** Root 73% (8.3G free), /data 44% (27G free)
 
 ### Policy Updates (Relevant)
@@ -47,10 +50,10 @@ _Curated. Updated over time. Not a raw log._
 - **Cleanup:** 5-day archive, 20-day delete retention, daily cleanup script ready
 
 ### Model Integration
-- **Primary:** Claude Sonnet 4-6 (stable)
-- **Fallback:** Open Router Claude Sonnet 4-6 (Telegram rate limits)
-- **Issue:** DeepSeek API "Missing reasoning_content field" → switched to Claude
+- **Current:** deepseek-reasoner (custom-api-deepseek-com/deepseek-reasoner)
+- **Fallback:** Claude Sonnet 4-6 (stable, via direct API or OpenRouter)
 - **Multi-Model:** Orchestrator skill (task decomposition, model selection, workflow coordination)
+- **Note:** Model switches based on task requirements and API availability
 
 ### Lessons Learned (Essenz)
 1. **Heartbeat:** Nur bei exaktem Prompt HEARTBEAT_OK, sonst sofort antworten
@@ -107,14 +110,18 @@ _Curated. Updated over time. Not a raw log._
 ### System & Memory
 - **Diagnostics:** OpenClaw system troubleshooting
 - **Service Management:** Cron jobs, background processes, systemd services
-- **E5 Semantic Search:** intfloat/e5-small-v2 embeddings (880 chunks, 384-dim, 41 files), semantic search operational after content extraction fix
+- **E5 Semantic Search:** intfloat/e5-small-v2 embeddings (880 chunks, 384-dim, 41 files), semantic search operational
 - **LangGraph Integration:** Daily memory organization, relationship computation
 - **Memory Visualization:** Flask web interface (timeline, search, stats dashboard)
+- **Academic Writing Tools:** paper.write (FHNW citations), ghostwriter (style emulation), KI-Deklaration templates
 
 ### Coding & Integration
 - **Async Agent Pattern:** Externalized state for session-fragile operations
 - **Multi-Model Orchestrator:** Task decomposition, model selection, workflow coordination
 - **Integration Principle:** Standalone solutions + HTTP bridges when OpenClaw constraints block
+- **Academic Writing Skills:** 
+  - **paper.write:** FHNW citation rules (Wegleitung 2018), bibliography formatting, style improvement
+  - **ghostwriter:** Academic ghostwriting with style emulation, KI-Deklaration generation, FHNW compliance
 
 ### External Access
 - **Termius link parsing:** `external-terminal-access` skill
@@ -159,7 +166,7 @@ _Curated. Updated over time. Not a raw log._
 - **Integration:** Enhanced PROJECT.md with clear category separation
 
 ---
-**Letzte Aktualisierung:** 05-03-2026 17:48 UTC  
-**Größe:** ~6,500 Zeichen (unter 20.000 Limit)  
-**Performance:** Deutlich reduzierte Session-Ladezeit  
-**Struktur:** Hierarchische Komprimierung mit Informationserhalt
+**Letzte Aktualisierung:** 06-03-2026 01:58 UTC  
+**Größe:** ~7,200 Zeichen (unter 20.000 Limit)  
+**Performance:** Optimierte Komprimierung mit Skills-Integration  
+**Struktur:** Hierarchische Komprimierung mit FHNW-Akademie-Fokus
